@@ -19,4 +19,16 @@ export const header = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
   },
+  imageContainer: {
+    width: 20,
+    height: 20,
+    marginLeft: 10,
+    marginRight: 5,
+  },
+  backImage: {
+    resizeMode: "contain",
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
 });

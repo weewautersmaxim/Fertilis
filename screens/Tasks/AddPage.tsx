@@ -9,9 +9,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
+import Task from "../../models/Task";
 import { background } from "../../styles/colors/theme";
 import { header } from "../../styles/components/header";
-const Plants = ({ navigation }: any) => {
+
+const AddPage = ({ navigation }: any) => {
+  const [newTask, setNewTask] = useState<Task>({
+    activity: "string",
+    timer: 50,
+    plant: 2,
+  });
+
+  const [sliderValue, setSliderValue] = useState(10);
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -53,6 +62,7 @@ const Plants = ({ navigation }: any) => {
         ></TouchableOpacity>
       </View>
       {/* end header */}
+
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
@@ -65,11 +75,79 @@ const Plants = ({ navigation }: any) => {
               fontSize: 20,
               marginTop: 20,
               marginBottom: 5,
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
             }}
           >
-            Plants:
+            Activity:
+          </Text>
+        </View>
+      </View>
+      <View style={{ alignItems: "center" }}>
+        <TextInput
+          placeholder="write your task!"
+          style={{
+            backgroundColor: "white",
+            width: "85%",
+            height: 50,
+            paddingLeft: 10,
+            borderRadius: 5,
+          }}
+          multiline={true}
+          returnKeyType="done"
+        ></TextInput>
+      </View>
+
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            width: "85%",
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              marginTop: 20,
+              marginBottom: 5,
+            }}
+          >
+            Timer:
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Slider
+          style={{ width: "90%" }}
+          minimumValue={10}
+          maximumValue={240}
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#1A9375"
+          step={10}
+          onValueChange={(value) => setSliderValue(value)}
+        />
+        <Text style={{ color: "white", fontSize: 25 }}>
+          {sliderValue} minutes
+        </Text>
+      </View>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            width: "85%",
+          }}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              marginTop: 20,
+              marginBottom: 5,
+            }}
+          >
+            Plant:
           </Text>
         </View>
       </View>
@@ -83,7 +161,7 @@ const Plants = ({ navigation }: any) => {
         >
           <TouchableOpacity>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
+              <Text style={{ color: "white" }}>test</Text>
             </View>
             <View style={{ width: 60, height: 60 }}>
               <Image
@@ -102,7 +180,7 @@ const Plants = ({ navigation }: any) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
+              <Text style={{ color: "white" }}>test</Text>
             </View>
             <View style={{ width: 60, height: 60 }}>
               <Image
@@ -121,7 +199,7 @@ const Plants = ({ navigation }: any) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
+              <Text style={{ color: "white" }}>test</Text>
             </View>
             <View style={{ width: 60, height: 60 }}>
               <Image
@@ -140,7 +218,7 @@ const Plants = ({ navigation }: any) => {
           </TouchableOpacity>
           <TouchableOpacity>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
+              <Text style={{ color: "white" }}>test</Text>
             </View>
             <View style={{ width: 60, height: 60 }}>
               <Image
@@ -159,120 +237,31 @@ const Plants = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* end section plants */}
-      {/* start section achievments */}
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log("start created");
+        }}
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 30,
+        }}
+      >
         <View
           style={{
-            width: "85%",
+            backgroundColor: "#68D2AE",
+            width: 120,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 5,
           }}
         >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              marginTop: 20,
-              marginBottom: 5,
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
-            }}
-          >
-            Achievements:
+          <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
+            Create
           </Text>
         </View>
-      </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-            justifyContent: "space-between",
-            flexDirection: "row",
-          }}
-        >
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
-                source={require("../../assets/DeleteLater.png")}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>30:00</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
-                source={require("../../assets/DeleteLater.png")}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>60:00</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20, opacity: 0.4 }}>
-                test
-              </Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                  opacity: 0.4,
-                }}
-                source={require("../../assets/DeleteLater.png")}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20, opacity: 0.4 }}>
-                60:00
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
-                source={require("../../assets/DeleteLater.png")}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>60:00</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
-export default Plants;
+export default AddPage;
