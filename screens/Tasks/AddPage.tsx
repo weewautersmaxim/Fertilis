@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -12,15 +12,32 @@ import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
 import { background } from "../../styles/colors/theme";
 import { header } from "../../styles/components/header";
+import { initTasks, taskCRUD } from "../../utils/db";
 
 const AddPage = ({ navigation }: any) => {
+  useEffect(() => {
+    initTasks();
+  }, []);
+
   const [newTask, setNewTask] = useState<Task>({
-    activity: "string",
-    timer: 50,
-    plant: 2,
+    activity: "test",
+    timer: 150,
+    plant: "violet",
   });
 
   const [sliderValue, setSliderValue] = useState(10);
+
+  const saveTask = async () => {
+    if (newTask.activity && newTask.timer && newTask.plant) {
+      const insert = await taskCRUD.create(newTask);
+      console.log({ insert });
+      if (insert.rowsAffected > 0) {
+        navigation.navigate("TaskPage");
+      }
+    } else {
+      console.log("not saved");
+    }
+  };
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -93,6 +110,13 @@ const AddPage = ({ navigation }: any) => {
           }}
           multiline={true}
           returnKeyType="done"
+          onChangeText={(text: string) => {
+            setNewTask((oldTask: Task) => {
+              oldTask.activity = text;
+              return { ...oldTask };
+            });
+          }}
+          value={newTask?.activity}
         ></TextInput>
       </View>
 
@@ -127,7 +151,14 @@ const AddPage = ({ navigation }: any) => {
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#1A9375"
           step={10}
-          onValueChange={(value) => setSliderValue(value)}
+          // onValueChange={(value) => setSliderValue(value)}
+          onValueChange={(text: number) => {
+            setNewTask((oldTask: Task) => {
+              oldTask.timer = text;
+              return { ...oldTask };
+            });
+          }}
+          value={newTask?.timer}
         />
         <Text style={{ color: "white", fontSize: 25 }}>
           {sliderValue} minutes
@@ -159,7 +190,14 @@ const AddPage = ({ navigation }: any) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setNewTask((oldTask: Task) => {
+                oldTask.plant = "bloem";
+                return { ...oldTask };
+              });
+            }}
+          >
             <View style={{ alignItems: "center" }}>
               <Text style={{ color: "white" }}>test</Text>
             </View>
@@ -239,7 +277,7 @@ const AddPage = ({ navigation }: any) => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          console.log("start created");
+          saveTask();
         }}
         style={{
           justifyContent: "center",
