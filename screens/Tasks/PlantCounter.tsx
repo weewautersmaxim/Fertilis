@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
@@ -6,11 +6,47 @@ import { background } from "../../styles/colors/theme";
 import { header } from "../../styles/components/header";
 import Logo from "../../Components/Logo";
 import { Timer } from "../../styles/components/Timer";
-import Slider from "@react-native-community/slider";
 
 const PlantCounter = ({ navigation }: any) => {
-  const [sliderValue, setSliderValue] = useState(10);
-  const [animation, setanimation] = React.useState(false);
+  //usestates
+  const [animation, setanimation] = useState(true);
+  const [secondsLeft, setSecondsLeft] = useState(42669);
+  const [timerOn, setTimerOn] = useState(false);
+  const [buttonName, SetButtonName] = useState("Start");
+
+  //useffects
+  // Runs when timerOn value changes to start or stop timer
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timerOn) {
+        SetButtonName("Stop");
+        setSecondsLeft((secs) => {
+          if (secs > 0) return secs - 1;
+          else return 0;
+        });
+      } else {
+        SetButtonName("Start");
+      }
+    }, 1000);
+    console.log(secondsLeft);
+    return () => clearInterval(interval);
+  }, [timerOn]);
+
+  //methods
+  const clockify = () => {
+    let hours = Math.floor(secondsLeft / 60 / 60);
+    let mins = Math.floor((secondsLeft / 60) % 60);
+    let seconds = Math.floor(secondsLeft % 60);
+    let displayHours = hours < 10 ? `0${hours}` : hours;
+    let displayMins = mins < 10 ? `0${mins}` : mins;
+    let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
+    return {
+      displayHours,
+      displayMins,
+      displaySecs,
+    };
+  };
 
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
@@ -65,6 +101,7 @@ const PlantCounter = ({ navigation }: any) => {
         <View
           style={{ alignItems: "center", backgroundColor: "red", width: "85%" }}
         >
+          {/* lottie file */}
           <LottieView
             style={{ width: "100%", position: "absolute" }}
             source={require("../../assets/Lottie/Breathing.json")}
@@ -94,30 +131,23 @@ const PlantCounter = ({ navigation }: any) => {
         style={{
           justifyContent: "center",
           alignItems: "center",
-          marginTop: 100,
+          marginTop: 80,
         }}
       >
-        <Text style={{ color: "white", fontSize: 25 }}>{sliderValue}</Text>
-        <Slider
-          style={{ width: "80%" }}
-          minimumValue={10}
-          maximumValue={240}
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#1A9375"
-          step={1}
-          onValueChange={(value) => setSliderValue(value)}
-        />
+        <Text style={{ color: "white", fontSize: 28 }}>
+          {clockify().displayHours}:{clockify().displayMins}:{""}
+          {clockify().displaySecs}
+        </Text>
       </View>
       <TouchableOpacity
         onPress={() => {
-          console.log("timer started");
           setanimation(true);
-          console.log(animation);
+          setTimerOn((timerOn) => !timerOn);
         }}
         style={{
           justifyContent: "center",
           alignItems: "center",
-          marginTop: 10,
+          marginTop: 20,
         }}
       >
         <View
@@ -130,7 +160,7 @@ const PlantCounter = ({ navigation }: any) => {
           }}
         >
           <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
-            Start
+            {buttonName}
           </Text>
         </View>
       </TouchableOpacity>

@@ -21,11 +21,11 @@ const AddPage = ({ navigation }: any) => {
 
   const [newTask, setNewTask] = useState<Task>({
     activity: "test",
-    timer: 150,
+    timer: 60,
     plant: "violet",
   });
 
-  const [sliderValue, setSliderValue] = useState(10);
+  const [sliderValue, setSliderValue] = useState(60);
 
   const saveTask = async () => {
     if (newTask.activity && newTask.timer && newTask.plant) {
@@ -151,10 +151,10 @@ const AddPage = ({ navigation }: any) => {
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#1A9375"
           step={10}
-          // onValueChange={(value) => setSliderValue(value)}
           onValueChange={(text: number) => {
             setNewTask((oldTask: Task) => {
               oldTask.timer = text;
+              setSliderValue(text);
               return { ...oldTask };
             });
           }}
