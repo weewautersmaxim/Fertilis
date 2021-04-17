@@ -25,14 +25,13 @@ const PlantCounter = ({ navigation, route }: any) => {
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
     const dbTask = (res as any).rows._array[0];
-    console.log(dbTask);
     setDetail(dbTask);
   };
   const saveTask = async () => {
     if (detail?.activity && detail.id && detail.plant && detail.timer) {
       const res = await taskCRUD.update(detail);
       if (res.rowsAffected == 1) {
-        navigation.navigate("Taskpage");
+        navigation.navigate("TaskPage");
       }
     }
   };
@@ -40,6 +39,7 @@ const PlantCounter = ({ navigation, route }: any) => {
     if (detail.timer) {
       let time = detail.timer * 60;
       setSecondsLeft(time);
+      console.log(secondsLeft);
     }
   };
   useEffect(() => {
@@ -60,7 +60,6 @@ const PlantCounter = ({ navigation, route }: any) => {
         });
       } else SetButtonName("Start");
     }, 1000);
-    console.log(secondsLeft);
 
     return () => clearInterval(interval);
   }, [timerOn]);
@@ -89,7 +88,13 @@ const PlantCounter = ({ navigation, route }: any) => {
             width: "33%",
             flexDirection: "row",
           }}
-          onPress={() => navigation.navigate("TaskPage")}
+          onPress={() => {
+            setDetail((oldNote: Task) => {
+              oldNote.timer = Math.round(secondsLeft / 60);
+              return { ...oldNote };
+            });
+            saveTask();
+          }}
         >
           <View style={header.imageContainer}>
             <Image
@@ -114,9 +119,6 @@ const PlantCounter = ({ navigation, route }: any) => {
             width: "33%",
             flexDirection: "row",
             alignItems: "center",
-          }}
-          onPress={() => {
-            saveTask();
           }}
         ></TouchableOpacity>
       </View>

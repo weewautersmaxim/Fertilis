@@ -22,9 +22,6 @@ const transaction = (db: Database): Promise<SQLTransaction> => {
       },
       (error) => {
         reject(error);
-      },
-      () => {
-        console.info("Transaction succeeded");
       }
     );
   });

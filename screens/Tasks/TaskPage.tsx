@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  ScrollView,
-  Animated,
-} from "react-native";
+import { Text, TouchableOpacity, View, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
@@ -21,10 +14,10 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 const TaskPage = ({ navigation }: any) => {
   //usestates
   const [TaskState, SetTaskState] = useState<Task[]>([]);
-
   //useEffects
   useEffect(() => {
     getTasks();
+    filter();
   }, []);
 
   useFocusEffect(
@@ -32,22 +25,27 @@ const TaskPage = ({ navigation }: any) => {
       getTasks();
     }, [])
   );
-  useEffect(() => {
-    console.log("found tasks", { TaskState });
-  });
 
-  //functions
+  //methods
   const getTasks = async () => {
     const { rows }: { rows: SQLResultSetRowList } = await taskCRUD.read.all();
-    console.log({ rows });
+    // console.log({ rows });
     SetTaskState((rows as any)._array);
   };
   const removeTasks = async (id: number) => {
     const res = await taskCRUD.delete(id);
-    console.log({ res });
+    // console.log({ res });
     getTasks();
   };
 
+  const filter = () => {
+    for (let i = 0; i < TaskState.length; i++) {
+      console.log(TaskState[i].activity);
+      if (TaskState[i].activity == "test") {
+        console.log("hier is de dader maiesteit");
+      }
+    }
+  };
   const leftSwipe = () => {
     return (
       <View
