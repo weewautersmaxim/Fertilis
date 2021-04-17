@@ -6,13 +6,46 @@ import { background } from "../../styles/colors/theme";
 import { header } from "../../styles/components/header";
 import Logo from "../../Components/Logo";
 import { Timer } from "../../styles/components/Timer";
+import Task from "../../models/Task";
+import { taskCRUD } from "../../utils/db";
 
-const PlantCounter = ({ navigation }: any) => {
+const PlantCounter = ({ navigation, route }: any) => {
   //usestates
   const [animation, setanimation] = useState(true);
-  const [secondsLeft, setSecondsLeft] = useState(42669);
+  const [secondsLeft, setSecondsLeft] = useState(3600);
   const [timerOn, setTimerOn] = useState(false);
   const [buttonName, SetButtonName] = useState("Start");
+
+  //SQLiteDatabase
+  const [detail, setDetail] = useState<Task>({
+    activity: "",
+    timer: 0,
+    plant: "",
+  });
+  const getDetail = async () => {
+    const res = await taskCRUD.read.detail(+route.params.id);
+    const dbTask = (res as any).rows._array[0];
+    console.log(dbTask);
+    setDetail(dbTask);
+  };
+  const saveTask = async () => {
+    if (detail?.activity && detail.id && detail.plant && detail.timer) {
+      const res = await taskCRUD.update(detail);
+      if (res.rowsAffected == 1) {
+        navigation.navigate("Taskpage");
+      }
+    }
+  };
+  const adjustingTimer = () => {
+    if (detail.timer) {
+      let time = detail.timer * 60;
+      setSecondsLeft(time);
+    }
+  };
+  useEffect(() => {
+    adjustingTimer();
+    getDetail();
+  }, []);
 
   //useffects
   // Runs when timerOn value changes to start or stop timer
@@ -25,11 +58,10 @@ const PlantCounter = ({ navigation }: any) => {
           if (secs > 0) return secs - 1;
           else return 0;
         });
-      } else {
-        SetButtonName("Start");
-      }
+      } else SetButtonName("Start");
     }, 1000);
     console.log(secondsLeft);
+
     return () => clearInterval(interval);
   }, [timerOn]);
 
@@ -84,7 +116,7 @@ const PlantCounter = ({ navigation }: any) => {
             alignItems: "center",
           }}
           onPress={() => {
-            console.log("add");
+            saveTask();
           }}
         ></TouchableOpacity>
       </View>
@@ -95,7 +127,7 @@ const PlantCounter = ({ navigation }: any) => {
           marginTop: 20,
         }}
       >
-        <Text style={Timer.titel}>Homework</Text>
+        <Text style={Timer.titel}>{detail?.activity}</Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View
@@ -111,7 +143,7 @@ const PlantCounter = ({ navigation }: any) => {
             style={{
               width: 200,
               height: 200,
-              marginTop: 65,
+              marginTop: 68,
             }}
           >
             <Image

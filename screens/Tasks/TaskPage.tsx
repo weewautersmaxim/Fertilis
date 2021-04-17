@@ -161,7 +161,9 @@ const TaskPage = ({ navigation }: any) => {
               }}
             >
               <TouchableOpacity
-                onPress={() => navigation.navigate("PlantCounter")}
+                onPress={() =>
+                  navigation.navigate("PlantCounter", { id: n.id })
+                }
                 style={Tasks.task}
                 key={n.id}
               >
