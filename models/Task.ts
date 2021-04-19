@@ -3,4 +3,5 @@ export default interface Task {
   activity?: string;
   timer?: number;
   plant?: string;
+  unfinished?: string;
 }

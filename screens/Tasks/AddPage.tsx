@@ -23,6 +23,7 @@ const AddPage = ({ navigation }: any) => {
     activity: "test",
     timer: 60,
     plant: "violet",
+    unfinished: "false",
   });
 
   const [sliderValue, setSliderValue] = useState(60);

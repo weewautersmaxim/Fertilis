@@ -8,7 +8,7 @@ import {
 } from "expo-sqlite";
 import Task from "../models/Task";
 
-const databaseName: string = "tasksTable";
+const databaseName: string = "task";
 
 const getDb = (name: string = databaseName): Database => {
   return openDatabase(name);
@@ -52,7 +52,7 @@ export const initTasks = async () => {
   if (tx) {
     await query(tx, {
       sql:
-        "CREATE TABLE IF NOT EXISTS `tasksTable` (id integer primary key autoincrement, activity text, timer number, plant text)",
+        "CREATE TABLE IF NOT EXISTS `task` (id integer primary key autoincrement, activity text, timer number, plant text, unfinished text)",
       args: [],
     });
   }
@@ -67,14 +67,14 @@ export const taskCRUD = {
 
       const res = await query(tx, {
         sql:
-          "INSERT INTO `tasksTable` (id, activity, timer, plant) values(?, ?, ?, ?)",
-        args: [null, n.activity, n.timer, n.plant],
+          "INSERT INTO `task` (id, activity, timer, plant, unfinished) values(?, ?, ?, ?, ?)",
+        args: [null, n.activity, n.timer, n.plant, n.unfinished],
       }).catch((error) => {
         reject(error);
       });
 
       if (res) resolve(res);
-      console.log(res);
+      // console.log(res);
     });
   },
 
@@ -84,10 +84,24 @@ export const taskCRUD = {
       return new Promise(async function (resolve, reject) {
         const db = getDb(),
           tx = await transaction(db);
-
         const res = await query(tx, {
-          sql: "SELECT * FROM `tasksTable`",
+          sql: "SELECT * FROM `task`",
           args: [],
+        }).catch((error) => {
+          reject(error);
+        });
+
+        if (res) resolve(res);
+      });
+    },
+    unfinished: (): Promise<SQLResultSet> => {
+      return new Promise(async function (resolve, reject) {
+        const db = getDb(),
+          tx = await transaction(db);
+        let bool = "true";
+        const res = await query(tx, {
+          sql: "SELECT * FROM `task` WHERE unfinished = ?",
+          args: [bool],
         }).catch((error) => {
           reject(error);
         });
@@ -102,7 +116,7 @@ export const taskCRUD = {
         const tx = await transaction(db);
 
         const res = await query(tx, {
-          sql: "SELECT * FROM 'tasksTable' WHERE id = ?",
+          sql: "SELECT * FROM 'task' WHERE id = ?",
           args: [id],
         }).catch((error) => {
           reject(error);
@@ -123,8 +137,8 @@ export const taskCRUD = {
 
       const res = await query(tx, {
         sql:
-          "UPDATE `tasksTable` SET activity = ? , timer = ? , plant = ? WHERE id = ?",
-        args: [n.activity, n.timer, n.plant, n.id],
+          "UPDATE `task` SET activity = ? , timer = ? , plant = ?, unfinished = ? WHERE id = ?",
+        args: [n.activity, n.timer, n.plant, n.unfinished, n.id],
       }).catch((error) => {
         reject(error);
       });
@@ -140,7 +154,7 @@ export const taskCRUD = {
         tx = await transaction(db);
 
       const res = await query(tx, {
-        sql: "DELETE FROM `tasksTable` WHERE id = ?",
+        sql: "DELETE FROM `task` WHERE id = ?",
         args: [id],
       }).catch((error) => {
         reject(error);

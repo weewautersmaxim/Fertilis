@@ -21,6 +21,7 @@ const PlantCounter = ({ navigation, route }: any) => {
     activity: "",
     timer: 0,
     plant: "",
+    unfinished: "",
   });
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
@@ -28,7 +29,13 @@ const PlantCounter = ({ navigation, route }: any) => {
     setDetail(dbTask);
   };
   const saveTask = async () => {
-    if (detail?.activity && detail.id && detail.plant && detail.timer) {
+    if (
+      detail?.activity &&
+      detail.id &&
+      detail.plant &&
+      detail.timer &&
+      detail.unfinished
+    ) {
       const res = await taskCRUD.update(detail);
       if (res.rowsAffected == 1) {
         navigation.navigate("TaskPage");
@@ -39,7 +46,6 @@ const PlantCounter = ({ navigation, route }: any) => {
     if (detail.timer) {
       let time = detail.timer * 60;
       setSecondsLeft(time);
-      console.log(secondsLeft);
     }
   };
   useEffect(() => {
@@ -90,7 +96,7 @@ const PlantCounter = ({ navigation, route }: any) => {
           }}
           onPress={() => {
             setDetail((oldNote: Task) => {
-              oldNote.timer = Math.round(secondsLeft / 60);
+              oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
               return { ...oldNote };
             });
             saveTask();
@@ -177,6 +183,10 @@ const PlantCounter = ({ navigation, route }: any) => {
         onPress={() => {
           setanimation(true);
           setTimerOn((timerOn) => !timerOn);
+          setDetail((oldNote: Task) => {
+            oldNote.unfinished = "true";
+            return { ...oldNote };
+          });
         }}
         style={{
           justifyContent: "center",
