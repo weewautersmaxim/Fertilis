@@ -24,16 +24,24 @@ const PlantCounter = ({ navigation, route }: any) => {
     activity: "",
     timer: 0,
     plant: "",
+    plantTimer: 0,
     unfinished: "",
   });
 
   useEffect(() => {
-    adjustingTimer();
     getDetail();
   }, []);
 
   useEffect(() => {
+    adjustingTimer();
+  }, []);
+
+  useEffect(() => {
     GetRightImage();
+  }, [detail]);
+
+  useEffect(() => {
+    adjustingTimer();
   }, [detail]);
 
   //useffects
@@ -48,16 +56,34 @@ const PlantCounter = ({ navigation, route }: any) => {
         });
       } else SetButtonName("Start");
     }, 1000);
+    setDetail((oldNote: Task) => {
+      oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
+      return { ...oldNote };
+    });
+
     return () => clearInterval(interval);
   }, [timerOn]);
 
- 
+  //timer plant
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     if (timerOn) {
+  //       setSecondsPlant((secs) => {
+  //         if (secs > 0) return secs - 1;
+  //         else return 0;
+  //       });
+  //     }
+  //   }, 1000);
+  //   console.log("test", SecondsPlant);
+  //   return () => clearInterval(interval);
+  // }, [timerOn]);
 
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
     const dbTask = (res as any).rows._array[0];
     setDetail(dbTask);
   };
+
   const saveTask = async () => {
     if (
       detail?.activity &&
@@ -107,8 +133,6 @@ const PlantCounter = ({ navigation, route }: any) => {
       displaySecs,
     };
   };
-
-  console.log(detail);
 
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
