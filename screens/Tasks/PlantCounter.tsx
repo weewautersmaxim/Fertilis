@@ -12,7 +12,7 @@ import { taskCRUD } from "../../utils/db";
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
   const [animation, setanimation] = useState(true);
-  const [secondsLeft, setSecondsLeft] = useState(3600);
+  const [secondsLeft, setSecondsLeft] = useState(5);
   const [timerOn, setTimerOn] = useState(false);
   const [buttonName, SetButtonName] = useState("Start");
 
@@ -52,6 +52,7 @@ const PlantCounter = ({ navigation, route }: any) => {
     adjustingTimer();
     getDetail();
   }, []);
+  
 
   //useffects
   // Runs when timerOn value changes to start or stop timer

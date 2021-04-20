@@ -22,17 +22,17 @@ const TaskPage = ({ navigation }: any) => {
   //usestates
   const [TaskState, SetTaskState] = useState<Task[]>([]);
   const [unfinishedTasks, SetunfinishedTasks] = useState<Task[]>([]);
-  const [test, Settest] = useState(false);
+  const [Isfinished, SetIsfinished] = useState(false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getTasks();
-  }, []);
+    TimerDone();
+  }, [TaskState]);
 
   useFocusEffect(
     useCallback(() => {
       getTasks();
-    }, [isFocused])
+    }, [])
   );
 
   //methods
@@ -53,14 +53,22 @@ const TaskPage = ({ navigation }: any) => {
         // console.log(Arraynew.pop(TaskState[i]));
       }
     }
+
     SetunfinishedTasks(unifinishedTask);
-    Settest(true);
   };
 
   const removeTasks = async (id: number) => {
     const res = await taskCRUD.delete(id);
-    // console.log({ res });
     getTasks();
+  };
+
+  const TimerDone = () => {
+    for (let i = 0; i < TaskState.length; i++) {
+      if (TaskState[i].timer == 0 && Isfinished == false) {
+        SetIsfinished(true);
+        removeTasks(parseInt(TaskState[i].id!));
+      }
+    }
   };
 
   const leftSwipe = () => {
