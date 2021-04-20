@@ -32,7 +32,6 @@ const TaskPage = ({ navigation }: any) => {
   }, [TaskState]);
 
   useEffect(() => {
-    console.log(TaskState);
     TimerDone();
   }, [TaskState]);
 
@@ -113,18 +112,39 @@ const TaskPage = ({ navigation }: any) => {
     );
   };
 
-  // const counter = () => {
-  //   for (let i = 0; i < TaskState.length; i++) {
-  //     let num = TaskState[i].timer?.toString();
-  //     let devider: any = num?.split(".");
-  //     if (Number.isNaN(devider[1])) {
-  //       console.log("test");
-  //       devider[1] = "00";
-  //     }
-  //     devider[i] = parseFloat(devider[i]);
-  //     console.log(devider);
-  //   }
-  // };
+  const clockify = () => {
+    for (let i = 0; i < TaskState.length; i++) {
+      if (TaskState[i].timer != 0) {
+        let timer = TaskState[i].timer! * 60;
+        let hours = Math.floor(timer / 60 / 60);
+        let mins = Math.floor((timer / 60) % 60);
+        let seconds = Math.floor(timer % 60);
+        let displayHours = hours < 10 ? `0${hours}` : hours;
+        let displayMins = mins < 10 ? `0${mins}` : mins;
+        let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
+        return {
+          displayHours,
+          displayMins,
+          displaySecs,
+        };
+      }
+    }
+  };
+
+  const test = (): string => {
+    let time = "";
+    for (let i = 0; i < TaskState.length; i++) {
+      if (TaskState[i].timer != 0) {
+        time =
+          clockify()!.displayHours +
+          ":" +
+          clockify()!.displayMins +
+          ":" +
+          clockify()!.displaySecs;
+      }
+    }
+    return time;
+  };
 
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
@@ -211,7 +231,7 @@ const TaskPage = ({ navigation }: any) => {
                 <Text
                   style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
                 >
-                  {n.timer}
+                  {test()}
                 </Text>
               </TouchableOpacity>
             </Swipeable>
@@ -251,7 +271,7 @@ const TaskPage = ({ navigation }: any) => {
                 <Text
                   style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
                 >
-                  {n.timer}
+                  {test()}
                 </Text>
               </TouchableOpacity>
             </Swipeable>
