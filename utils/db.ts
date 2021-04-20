@@ -52,7 +52,7 @@ export const initTasks = async () => {
   if (tx) {
     await query(tx, {
       sql:
-        "CREATE TABLE IF NOT EXISTS `task` (id integer primary key autoincrement, activity text, timer number, plant text, unfinished text)",
+        "CREATE TABLE IF NOT EXISTS `task` (id integer primary key autoincrement, activity text, timer number, plant text, plantTimer number,unfinished text)",
       args: [],
     });
   }
@@ -67,8 +67,8 @@ export const taskCRUD = {
 
       const res = await query(tx, {
         sql:
-          "INSERT INTO `task` (id, activity, timer, plant, unfinished) values(?, ?, ?, ?, ?)",
-        args: [null, n.activity, n.timer, n.plant, n.unfinished],
+          "INSERT INTO `task` (id, activity, timer, plant, plantTimer, unfinished) values(?, ?, ?, ?, ?, ?)",
+        args: [null, n.activity, n.timer, n.plant, n.plantTimer, n.unfinished],
       }).catch((error) => {
         reject(error);
       });
@@ -137,8 +137,8 @@ export const taskCRUD = {
 
       const res = await query(tx, {
         sql:
-          "UPDATE `task` SET activity = ? , timer = ? , plant = ?, unfinished = ? WHERE id = ?",
-        args: [n.activity, n.timer, n.plant, n.unfinished, n.id],
+          "UPDATE `task` SET activity = ? , timer = ? , plant = ?, plantTimer = ?, unfinished = ? WHERE id = ?",
+        args: [n.activity, n.timer, n.plant, n.plantTimer, n.unfinished, n.id],
       }).catch((error) => {
         reject(error);
       });

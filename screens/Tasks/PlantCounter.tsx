@@ -13,12 +13,12 @@ const PlantCounter = ({ navigation, route }: any) => {
   //usestates
   const [animation, setanimation] = useState(true);
   const [secondsLeft, setSecondsLeft] = useState(5);
+  const [SecondsPlant, setSecondsPlant] = useState(5);
   const [timerOn, setTimerOn] = useState(false);
   const [buttonName, SetButtonName] = useState("Start");
   const [Img, SetImg] = useState(
-    require("../../assets/Plants/plantIcons/Plant2.png")
+    require("../../assets/Plants/plantIcons/Plant1.png")
   );
-
   //SQLiteDatabase
   const [detail, setDetail] = useState<Task>({
     activity: "",
@@ -28,9 +28,30 @@ const PlantCounter = ({ navigation, route }: any) => {
   });
 
   useEffect(() => {
-    console.log("tis opgeroepen");
+    adjustingTimer();
+    getDetail();
+  }, []);
+
+  useEffect(() => {
     GetRightImage();
   }, [detail]);
+
+  //useffects
+  // Runs when timerOn value changes to start or stop timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timerOn) {
+        SetButtonName("Stop");
+        setSecondsLeft((secs) => {
+          if (secs > 0) return secs - 1;
+          else return 0;
+        });
+      } else SetButtonName("Start");
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timerOn]);
+
+ 
 
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
@@ -42,6 +63,7 @@ const PlantCounter = ({ navigation, route }: any) => {
       detail?.activity &&
       detail.id &&
       detail.plant &&
+      detail.plantTimer &&
       detail.timer &&
       detail.unfinished
     ) {
@@ -54,8 +76,13 @@ const PlantCounter = ({ navigation, route }: any) => {
 
   const GetRightImage = () => {
     if (detail.plant == "Ivy") {
-      console.log("deze plant is ivy");
-      SetImg(require("../../assets/Plants/plantIcons/Plant1.png"));
+      SetImg(require("../../assets/Plants/plant1_A.png"));
+    } else if (detail.plant == "Basil") {
+      SetImg(require("../../assets/Plants/plant2_A.png"));
+    } else if (detail.plant == "Kunal") {
+      SetImg(require("../../assets/Plants/plant3_A.png"));
+    } else {
+      SetImg(require("../../assets/Plants/plant4_A.png"));
     }
   };
 
@@ -65,27 +92,6 @@ const PlantCounter = ({ navigation, route }: any) => {
       setSecondsLeft(time);
     }
   };
-  useEffect(() => {
-    adjustingTimer();
-    getDetail();
-  }, []);
-
-  //useffects
-  // Runs when timerOn value changes to start or stop timer
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (timerOn) {
-        SetButtonName("Stop");
-        setSecondsLeft((secs) => {
-          if (secs > 0) return secs - 1;
-          else return 0;
-        });
-      } else SetButtonName("Start");
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [timerOn]);
 
   //methods
   const clockify = () => {
@@ -101,6 +107,8 @@ const PlantCounter = ({ navigation, route }: any) => {
       displaySecs,
     };
   };
+
+  console.log(detail);
 
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>

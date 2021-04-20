@@ -21,7 +21,8 @@ const AddPage = ({ navigation }: any) => {
   const [newTask, setNewTask] = useState<Task>({
     activity: "test",
     timer: 240,
-    plant: "violet",
+    plant: "Ivy",
+    plantTimer: 240,
     unfinished: "false",
   });
   //special usestates for every plant
@@ -91,7 +92,6 @@ const AddPage = ({ navigation }: any) => {
       setDisabledPlant4(disabled);
     }
   };
-  console.log("test", newTask);
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -250,6 +250,7 @@ const AddPage = ({ navigation }: any) => {
               onPress={() => {
                 setNewTask((oldTask: Task) => {
                   oldTask.plant = "Ivy";
+                  oldTask.plantTimer = 10 * 60;
                   return { ...oldTask };
                 });
               }}
@@ -279,6 +280,7 @@ const AddPage = ({ navigation }: any) => {
               onPress={() => {
                 setNewTask((oldTask: Task) => {
                   oldTask.plant = "Basil";
+                  oldTask.plantTimer = 30 * 60;
                   return { ...oldTask };
                 });
               }}
@@ -308,6 +310,7 @@ const AddPage = ({ navigation }: any) => {
               onPress={() => {
                 setNewTask((oldTask: Task) => {
                   oldTask.plant = "Kunal";
+                  oldTask.plantTimer = 60 * 60;
                   return { ...oldTask };
                 });
               }}
@@ -337,9 +340,9 @@ const AddPage = ({ navigation }: any) => {
               onPress={() => {
                 setNewTask((oldTask: Task) => {
                   oldTask.plant = "Dahlia";
+                  oldTask.plantTimer = 90 * 60;
                   return { ...oldTask };
                 });
-                console.log(newTask);
               }}
             >
               <View style={{ alignItems: "center" }}>

@@ -32,6 +32,7 @@ const TaskPage = ({ navigation }: any) => {
   }, [TaskState]);
 
   useEffect(() => {
+    console.log(TaskState);
     TimerDone();
   }, [TaskState]);
 
@@ -59,7 +60,6 @@ const TaskPage = ({ navigation }: any) => {
         // console.log(Arraynew.pop(TaskState[i]));
       }
     }
-
     SetunfinishedTasks(unifinishedTask);
   };
 
