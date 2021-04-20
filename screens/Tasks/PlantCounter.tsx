@@ -15,6 +15,9 @@ const PlantCounter = ({ navigation, route }: any) => {
   const [secondsLeft, setSecondsLeft] = useState(5);
   const [timerOn, setTimerOn] = useState(false);
   const [buttonName, SetButtonName] = useState("Start");
+  const [Img, SetImg] = useState(
+    require("../../assets/Plants/plantIcons/Plant2.png")
+  );
 
   //SQLiteDatabase
   const [detail, setDetail] = useState<Task>({
@@ -23,6 +26,12 @@ const PlantCounter = ({ navigation, route }: any) => {
     plant: "",
     unfinished: "",
   });
+
+  useEffect(() => {
+    console.log("tis opgeroepen");
+    GetRightImage();
+  }, [detail]);
+
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
     const dbTask = (res as any).rows._array[0];
@@ -42,6 +51,14 @@ const PlantCounter = ({ navigation, route }: any) => {
       }
     }
   };
+
+  const GetRightImage = () => {
+    if (detail.plant == "Ivy") {
+      console.log("deze plant is ivy");
+      SetImg(require("../../assets/Plants/plantIcons/Plant1.png"));
+    }
+  };
+
   const adjustingTimer = () => {
     if (detail.timer) {
       let time = detail.timer * 60;
@@ -52,7 +69,6 @@ const PlantCounter = ({ navigation, route }: any) => {
     adjustingTimer();
     getDetail();
   }, []);
-  
 
   //useffects
   // Runs when timerOn value changes to start or stop timer
@@ -162,7 +178,7 @@ const PlantCounter = ({ navigation, route }: any) => {
                 width: "100%",
                 height: "100%",
               }}
-              source={require("../../assets/plantTimer.png")}
+              source={Img}
             ></Image>
           </View>
         </View>

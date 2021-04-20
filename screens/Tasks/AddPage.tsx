@@ -339,6 +339,7 @@ const AddPage = ({ navigation }: any) => {
                   oldTask.plant = "Dahlia";
                   return { ...oldTask };
                 });
+                console.log(newTask);
               }}
             >
               <View style={{ alignItems: "center" }}>

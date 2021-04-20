@@ -23,7 +23,13 @@ const TaskPage = ({ navigation }: any) => {
   const [TaskState, SetTaskState] = useState<Task[]>([]);
   const [unfinishedTasks, SetunfinishedTasks] = useState<Task[]>([]);
   const [Isfinished, SetIsfinished] = useState(false);
-  const isFocused = useIsFocused();
+  const [taskImage, SetTaskImage] = useState(
+    require("../../assets/Plants/plantIcons/Plant2.png")
+  );
+
+  useEffect(() => {
+    TaskImage();
+  }, [TaskState]);
 
   useEffect(() => {
     TimerDone();
@@ -60,6 +66,21 @@ const TaskPage = ({ navigation }: any) => {
   const removeTasks = async (id: number) => {
     const res = await taskCRUD.delete(id);
     getTasks();
+  };
+
+  const TaskImage = () => {
+    for (let i = 0; i < TaskState.length; i++) {
+      console.log("task gevonden");
+      if (TaskState[i].plant == "Ivy") {
+        SetTaskImage(require("../../assets/Plants/plantIcons/Plant1.png"));
+      } else if (TaskState[i].plant == "Basil") {
+        SetTaskImage(require("../../assets/Plants/plantIcons/Plant2.png"));
+      } else if (TaskState[i].plant == "Kunal") {
+        SetTaskImage(require("../../assets/Plants/plantIcons/Plant3.png"));
+      } else {
+        SetTaskImage(require("../../assets/Plants/plantIcons/Plant4.png"));
+      }
+    }
   };
 
   const TimerDone = () => {
@@ -222,10 +243,7 @@ const TaskPage = ({ navigation }: any) => {
                 key={n.id}
               >
                 <View style={{ width: 65, height: 65 }}>
-                  <Image
-                    style={Tasks.taskImage}
-                    source={require("../../assets/DeleteLater.png")}
-                  />
+                  <Image style={Tasks.taskImage} source={taskImage} />
                 </View>
                 <Text style={{ fontSize: 25, color: "#707070" }}>
                   {n.activity}
