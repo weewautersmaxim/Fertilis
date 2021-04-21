@@ -37,12 +37,12 @@ const PlantCounter = ({ navigation, route }: any) => {
   }, []);
 
   useEffect(() => {
-    GetRightImage();
+    adjustingTimer();
   }, [detail]);
 
   useEffect(() => {
-    adjustingTimer();
-  }, [detail]);
+    GetRightImage();
+  });
 
   //useffects
   // Runs when timerOn value changes to start or stop timer
@@ -74,7 +74,7 @@ const PlantCounter = ({ navigation, route }: any) => {
       }
     }, 1000);
     setDetail((oldNote: Task) => {
-      oldNote.plantTimer = parseFloat((SecondsPlant / 60).toFixed(2));
+      oldNote.plantTimer = SecondsPlant;
       return { ...oldNote };
     });
     return () => clearInterval(interval);
@@ -96,14 +96,45 @@ const PlantCounter = ({ navigation, route }: any) => {
   };
 
   const GetRightImage = () => {
+    //if ivy
     if (detail.plant == "Ivy") {
-      SetImg(require("../../assets/Plants/plant1_A.png"));
-    } else if (detail.plant == "Basil") {
-      SetImg(require("../../assets/Plants/plant2_A.png"));
-    } else if (detail.plant == "Kunal") {
-      SetImg(require("../../assets/Plants/plant3_A.png"));
-    } else {
-      SetImg(require("../../assets/Plants/plant4_A.png"));
+      if (SecondsPlant > 300) {
+        SetImg(require("../../assets/Plants/plant1_A.png"));
+      } else if (SecondsPlant >= 100) {
+        SetImg(require("../../assets/Plants/plant1_B.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant1_C.png"));
+      }
+    }
+    //if basil
+    else if (detail.plant == "Basil") {
+      if (SecondsPlant > 900) {
+        SetImg(require("../../assets/Plants/plant2_A.png"));
+      } else if (SecondsPlant >= 150) {
+        SetImg(require("../../assets/Plants/plant2_B.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant2_C.png"));
+      }
+    }
+    //if kunal
+    else if (detail.plant == "Kunal") {
+      if (SecondsPlant > 1800) {
+        SetImg(require("../../assets/Plants/plant3_A.png"));
+      } else if (SecondsPlant >= 200) {
+        SetImg(require("../../assets/Plants/plant3_B.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant3_C.png"));
+      }
+    }
+    //if Dahlia
+    else {
+      if (SecondsPlant > 2700) {
+        SetImg(require("../../assets/Plants/plant4_A.png"));
+      } else if (SecondsPlant >= 300) {
+        SetImg(require("../../assets/Plants/plant4_B.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant4_C.png"));
+      }
     }
   };
 
