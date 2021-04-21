@@ -7,7 +7,6 @@ import {
   TextInput,
   Slider,
   StyleSheet,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
@@ -23,7 +22,7 @@ const AddPage = ({ navigation }: any) => {
     timer: 240,
     plant: "Ivy",
     plantTimer: 240,
-    unfinished: "false",
+    unfinished: "false"
   });
   //special usestates for every plant
   //for changing opacity for each individual plant

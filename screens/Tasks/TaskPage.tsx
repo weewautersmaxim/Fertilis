@@ -22,7 +22,6 @@ const TaskPage = ({ navigation }: any) => {
   //usestates
   const [TaskState, SetTaskState] = useState<Task[]>([]);
   const [unfinishedTasks, SetunfinishedTasks] = useState<Task[]>([]);
-  const [Isfinished, SetIsfinished] = useState(false);
   const [taskImage, SetTaskImage] = useState(
     require("../../assets/Plants/plantIcons/Plant2.png")
   );
@@ -66,10 +65,10 @@ const TaskPage = ({ navigation }: any) => {
     const res = await taskCRUD.delete(id);
     getTasks();
   };
+  console.log(TaskState);
 
   const TaskImage = () => {
     for (let i = 0; i < TaskState.length; i++) {
-      console.log("task gevonden");
       if (TaskState[i].plant == "Ivy") {
         SetTaskImage(require("../../assets/Plants/plantIcons/Plant1.png"));
       } else if (TaskState[i].plant == "Basil") {
@@ -84,8 +83,7 @@ const TaskPage = ({ navigation }: any) => {
 
   const TimerDone = () => {
     for (let i = 0; i < TaskState.length; i++) {
-      if (TaskState[i].timer == 0 && Isfinished == false) {
-        SetIsfinished(true);
+      if (TaskState[i].timer == 0) {
         removeTasks(parseInt(TaskState[i].id!));
       }
     }

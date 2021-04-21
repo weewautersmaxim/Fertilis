@@ -60,23 +60,25 @@ const PlantCounter = ({ navigation, route }: any) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
-
     return () => clearInterval(interval);
   }, [timerOn]);
 
-  //timer plant
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (timerOn) {
-  //       setSecondsPlant((secs) => {
-  //         if (secs > 0) return secs - 1;
-  //         else return 0;
-  //       });
-  //     }
-  //   }, 1000);
-  //   console.log("test", SecondsPlant);
-  //   return () => clearInterval(interval);
-  // }, [timerOn]);
+  // timer plant
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timerOn) {
+        setSecondsPlant((secs) => {
+          if (secs > 0) return secs - 1;
+          else return 0;
+        });
+      }
+    }, 1000);
+    setDetail((oldNote: Task) => {
+      oldNote.plantTimer = parseFloat((SecondsPlant / 60).toFixed(2));
+      return { ...oldNote };
+    });
+    return () => clearInterval(interval);
+  }, [timerOn]);
 
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
@@ -85,18 +87,11 @@ const PlantCounter = ({ navigation, route }: any) => {
   };
 
   const saveTask = async () => {
-    if (
-      detail?.activity &&
-      detail.id &&
-      detail.plant &&
-      detail.plantTimer &&
-      detail.timer &&
-      detail.unfinished
-    ) {
+    if (detail?.activity && detail.id) {
+      console.log("task wordt geupdate");
       const res = await taskCRUD.update(detail);
-      if (res.rowsAffected == 1) {
-        navigation.navigate("TaskPage");
-      }
+
+      navigation.navigate("TaskPage");
     }
   };
 
@@ -117,6 +112,10 @@ const PlantCounter = ({ navigation, route }: any) => {
       let time = detail.timer * 60;
       setSecondsLeft(time);
     }
+    if (detail.plantTimer) {
+      let planttime = detail.plantTimer;
+      setSecondsPlant(planttime);
+    }
   };
 
   //methods
@@ -124,6 +123,19 @@ const PlantCounter = ({ navigation, route }: any) => {
     let hours = Math.floor(secondsLeft / 60 / 60);
     let mins = Math.floor((secondsLeft / 60) % 60);
     let seconds = Math.floor(secondsLeft % 60);
+    let displayHours = hours < 10 ? `0${hours}` : hours;
+    let displayMins = mins < 10 ? `0${mins}` : mins;
+    let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
+    return {
+      displayHours,
+      displayMins,
+      displaySecs,
+    };
+  };
+  const clockifyPlant = () => {
+    let hours = Math.floor(SecondsPlant / 60 / 60);
+    let mins = Math.floor((SecondsPlant / 60) % 60);
+    let seconds = Math.floor(SecondsPlant % 60);
     let displayHours = hours < 10 ? `0${hours}` : hours;
     let displayMins = mins < 10 ? `0${mins}` : mins;
     let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
@@ -185,6 +197,10 @@ const PlantCounter = ({ navigation, route }: any) => {
         }}
       >
         <Text style={Timer.titel}>{detail?.activity}</Text>
+        <Text>
+          {clockifyPlant().displayHours}:{clockifyPlant().displayMins}:{""}
+          {clockifyPlant().displaySecs}
+        </Text>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <View

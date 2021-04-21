@@ -68,7 +68,14 @@ export const taskCRUD = {
       const res = await query(tx, {
         sql:
           "INSERT INTO `task` (id, activity, timer, plant, plantTimer, unfinished) values(?, ?, ?, ?, ?, ?)",
-        args: [null, n.activity, n.timer, n.plant, n.plantTimer, n.unfinished],
+        args: [
+          null,
+          n.activity,
+          n.timer,
+          n.plant,
+          n.plantTimer,
+          n.unfinished,
+        ],
       }).catch((error) => {
         reject(error);
       });
