@@ -80,6 +80,18 @@ const TaskPage = ({ navigation }: any) => {
       }
     }
   };
+  const plant = (plant: any) => {
+    switch (plant) {
+      case "Ivy":
+        return require("../../assets/Plants/plantIcons/Plant1.png");
+      case "Basil":
+        return require("../../assets/Plants/plantIcons/Plant2.png");
+      case "Kunal":
+        return require("../../assets/Plants/plantIcons/Plant3.png");
+      default:
+        return require("../../assets/Plants/plantIcons/Plant4.png");
+    }
+  };
 
   const TimerDone = () => {
     for (let i = 0; i < TaskState.length; i++) {
@@ -110,36 +122,32 @@ const TaskPage = ({ navigation }: any) => {
     );
   };
 
-  const clockify = () => {
-    for (let i = 0; i < TaskState.length; i++) {
-      if (TaskState[i].timer != 0) {
-        let timer = TaskState[i].timer! * 60;
-        let hours = Math.floor(timer / 60 / 60);
-        let mins = Math.floor((timer / 60) % 60);
-        let seconds = Math.floor(timer % 60);
-        let displayHours = hours < 10 ? `0${hours}` : hours;
-        let displayMins = mins < 10 ? `0${mins}` : mins;
-        let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-        return {
-          displayHours,
-          displayMins,
-          displaySecs,
-        };
-      }
+  const clockify = (timer: any) => {
+    if (timer != 0) {
+      let time = timer * 60;
+      let hours = Math.floor(time / 60 / 60);
+      let mins = Math.floor((time / 60) % 60);
+      let seconds = Math.floor(time % 60);
+      let displayHours = hours < 10 ? `0${hours}` : hours;
+      let displayMins = mins < 10 ? `0${mins}` : mins;
+      let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
+      return {
+        displayHours,
+        displayMins,
+        displaySecs,
+      };
     }
   };
 
-  const test = (): string => {
+  const clock = (timer: any) => {
     let time = "";
-    for (let i = 0; i < TaskState.length; i++) {
-      if (TaskState[i].timer != 0) {
-        time =
-          clockify()!.displayHours +
-          ":" +
-          clockify()!.displayMins +
-          ":" +
-          clockify()!.displaySecs;
-      }
+    if (timer != 0) {
+      time =
+        clockify(timer)!.displayHours +
+        ":" +
+        clockify(timer)!.displayMins +
+        ":" +
+        clockify(timer)!.displaySecs;
     }
     return time;
   };
@@ -218,10 +226,7 @@ const TaskPage = ({ navigation }: any) => {
                 key={n.id}
               >
                 <View style={{ width: 65, height: 65 }}>
-                  <Image
-                    style={Tasks.taskImage}
-                    source={require("../../assets/DeleteLater.png")}
-                  />
+                  <Image style={Tasks.taskImage} source={plant(n.plant)} />
                 </View>
                 <Text style={{ fontSize: 25, color: "#707070" }}>
                   {n.activity}
@@ -229,7 +234,7 @@ const TaskPage = ({ navigation }: any) => {
                 <Text
                   style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
                 >
-                  {test()}
+                  {clock(n.timer)}
                 </Text>
               </TouchableOpacity>
             </Swipeable>
@@ -261,7 +266,7 @@ const TaskPage = ({ navigation }: any) => {
                 key={n.id}
               >
                 <View style={{ width: 65, height: 65 }}>
-                  <Image style={Tasks.taskImage} source={taskImage} />
+                  <Image style={Tasks.taskImage} source={plant(n.plant)} />
                 </View>
                 <Text style={{ fontSize: 25, color: "#707070" }}>
                   {n.activity}
@@ -269,7 +274,7 @@ const TaskPage = ({ navigation }: any) => {
                 <Text
                   style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
                 >
-                  {test()}
+                  {clock(n.timer)}
                 </Text>
               </TouchableOpacity>
             </Swipeable>
