@@ -32,6 +32,11 @@ const Plants = ({ navigation }: any) => {
   const [opacityValueKunal, setOpacityValueKunal] = useState(1);
   const [opacityValueDahlia, setOpacityValueDahlia] = useState(1);
 
+  //opacity usestate achievements
+  const [achievOpacity1, SetAchievOpacity1] = useState(1);
+  const [achievOpacity2, SetAchievOpacity2] = useState(1);
+  const [achievOpacity3, SetAchievOpacity3] = useState(1);
+
   // useEffects;
 
   useEffect(() => {
@@ -50,6 +55,7 @@ const Plants = ({ navigation }: any) => {
 
   useEffect(() => {
     OpacityHandler();
+    achievements();
   }, [
     plantCounterIvy,
     plantCounterBasil,
@@ -66,7 +72,6 @@ const Plants = ({ navigation }: any) => {
   //get number of plants
 
   const plantNumber = () => {
-    console.log("plantnumber is called");
     let numberIvy = 0;
     let numberBasil = 0;
     let numberKunal = 0;
@@ -91,7 +96,6 @@ const Plants = ({ navigation }: any) => {
           SetPlantCounterDahlia(numberDahlia);
           break;
       }
-      OpacityHandler();
     }
   };
 
@@ -99,7 +103,10 @@ const Plants = ({ navigation }: any) => {
     opacityBasil: any,
     opacityIvy: any,
     opacityKunal: any,
-    opacityDahlia: any
+    opacityDahlia: any,
+    opacityAchievement1: any,
+    achievOpacity2: any,
+    achievOpacity3: any
   ) =>
     StyleSheet.create({
       opacityIvy: {
@@ -114,12 +121,24 @@ const Plants = ({ navigation }: any) => {
       opacityDahlia: {
         opacity: opacityDahlia,
       },
+      opacityAchievement1: {
+        opacity: opacityAchievement1,
+      },
+      opacityAchievement2: {
+        opacity: achievOpacity2,
+      },
+      opacityAchievement3: {
+        opacity: achievOpacity3,
+      },
     });
   const styles = getStyles(
     opacityValueBasil,
     opacityValueIvy,
     opacityValueKunal,
-    opacityValueDahlia
+    opacityValueDahlia,
+    achievOpacity1,
+    achievOpacity2,
+    achievOpacity3
   );
 
   const OpacityHandler = () => {
@@ -145,6 +164,37 @@ const Plants = ({ navigation }: any) => {
       setOpacityValueDahlia(0.4);
     } else {
       setOpacityValueDahlia(1);
+    }
+  };
+
+  const achievements = () => {
+    let amountOfPlants =
+      plantCounterIvy +
+      plantCounterBasil +
+      plantCounterKunal +
+      plantCounterDahlia;
+
+    if (amountOfPlants >= 5) {
+      SetAchievOpacity1(1);
+    } else {
+      SetAchievOpacity1(0.4);
+    }
+
+    if (
+      plantCounterIvy != 0 &&
+      plantCounterBasil != 0 &&
+      plantCounterKunal != 0 &&
+      plantCounterDahlia != 0
+    ) {
+      SetAchievOpacity2(1);
+    } else {
+      SetAchievOpacity2(0.4);
+    }
+
+    if (amountOfPlants >= 25) {
+      SetAchievOpacity3(1);
+    } else {
+      SetAchievOpacity3(0.4);
     }
   };
 
@@ -489,85 +539,106 @@ const Plants = ({ navigation }: any) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
+          {/* achievement 1 */}
+          <TouchableOpacity style={{ width: 100 }}>
+            <View style={styles.opacityAchievement1}>
+              <View
                 style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
+                  alignItems: "center",
                 }}
-                source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
-              />
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ color: "white", fontSize: 14 }}>
+                    Getting started
+                  </Text>
+                </View>
+                <View style={{ width: 60, height: 60 }}>
+                  <Image
+                    style={{
+                      resizeMode: "contain",
+                      flex: 1,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
+                  />
+                </View>
+              </View>
             </View>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>30:00</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
-                source={require("../../assets/DeleteLater.png")}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>60:00</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20, opacity: 0.4 }}>
-                test
-              </Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                  opacity: 0.4,
-                }}
-                source={require("../../assets/DeleteLater.png")}
-              />
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20, opacity: 0.4 }}>
-                60:00
+              <Text
+                style={{ color: "white", fontSize: 12, textAlign: "center" }}
+              >
+                "Get a total of 5 plants"
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>test</Text>
-            </View>
-            <View style={{ width: 60, height: 60 }}>
-              <Image
+          {/* achievement 2 */}
+          <TouchableOpacity style={{ width: 100 }}>
+            <View style={styles.opacityAchievement2}>
+              <View
                 style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
+                  alignItems: "center",
                 }}
-                source={require("../../assets/DeleteLater.png")}
-              />
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ color: "white", fontSize: 14 }}>
+                    Catch em all
+                  </Text>
+                </View>
+                <View style={{ width: 60, height: 60 }}>
+                  <Image
+                    style={{
+                      resizeMode: "contain",
+                      flex: 1,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
+                  />
+                </View>
+              </View>
             </View>
             <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>60:00</Text>
+              <Text
+                style={{ color: "white", fontSize: 12, textAlign: "center" }}
+              >
+                "Get at least one of every plant"
+              </Text>
+            </View>
+          </TouchableOpacity>
+          {/* achievement 3 */}
+          <TouchableOpacity style={{ width: 100 }}>
+            <View style={styles.opacityAchievement3}>
+              <View
+                style={{
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Text style={{ color: "white", fontSize: 14 }}>
+                    Collector
+                  </Text>
+                </View>
+                <View style={{ width: 60, height: 60 }}>
+                  <Image
+                    style={{
+                      resizeMode: "contain",
+                      flex: 1,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <Text
+                style={{ color: "white", fontSize: 12, textAlign: "center" }}
+              >
+                "Get a total of 25 plants"
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
