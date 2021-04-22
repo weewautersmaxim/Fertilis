@@ -53,7 +53,6 @@ const PlantCounter = ({ navigation, route }: any) => {
 
   useEffect(() => {
     //extra ding
-    console.log(detail.plant);
     SetDetailPlant((oldNote: Plant) => {
       oldNote.plant = detail.plant;
       oldNote.activity = detail.activity;
@@ -139,11 +138,14 @@ const PlantCounter = ({ navigation, route }: any) => {
   //second database for saving data
   const savePlant = async () => {
     if (detailPlant.activity && detailPlant.plant && detailPlant.plantTimer) {
-      const insert = await PlantCRUD.create(detailPlant);
+      console.log(detail.plantTimer);
+      if (detail.plantTimer == 0) {
+        console.log("plant wordt opgeslagen");
+        await PlantCRUD.create(detailPlant);
+      }
     } else {
-      console.log("not saved");
+      console.log("plant not saved");
     }
-    console.log("detail plant", detailPlant);
   };
 
   const GetRightImage = () => {
@@ -195,7 +197,7 @@ const PlantCounter = ({ navigation, route }: any) => {
       setSecondsLeft(time);
     }
     if (detail.plantTimer) {
-      let planttime = detail.plantTimer;
+      let planttime = 1;
       setSecondsPlant(planttime);
     }
   };
