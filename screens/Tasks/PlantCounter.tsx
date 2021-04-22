@@ -33,6 +33,7 @@ const PlantCounter = ({ navigation, route }: any) => {
     activity: "test",
     plant: "Ivy",
     plantTimer: 600,
+    datePlant: "",
   });
 
   useEffect(() => {
@@ -53,9 +54,12 @@ const PlantCounter = ({ navigation, route }: any) => {
 
   useEffect(() => {
     //extra ding
+    let today = new Date().toLocaleDateString();
+
     SetDetailPlant((oldNote: Plant) => {
       oldNote.plant = detail.plant;
       oldNote.activity = detail.activity;
+      oldNote.datePlant = today;
       return { ...oldNote };
     });
 

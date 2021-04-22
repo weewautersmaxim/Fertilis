@@ -55,7 +55,7 @@ export const initPlants = async () => {
   if (tx) {
     await query(tx, {
       sql:
-        "CREATE TABLE IF NOT EXISTS `plantDb` (id integer primary key autoincrement, activity text, plant text, plantTimer number)",
+        "CREATE TABLE IF NOT EXISTS `plantDb` (id integer primary key autoincrement, activity text, plant text, plantTimer number, datePlant string)",
       args: [],
     });
   }
@@ -70,8 +70,8 @@ export const PlantCRUD = {
 
       const res = await query(tx, {
         sql:
-          "INSERT INTO `plantDb` (id, activity, plant, plantTimer) values(?, ?, ?, ?)",
-        args: [null, n.activity, n.plant, n.plantTimer],
+          "INSERT INTO `plantDb` (id, activity, plant, plantTimer, datePlant) values(?, ?, ?, ?, ?)",
+        args: [null, n.activity, n.plant, n.plantTimer, n.datePlant],
       }).catch((error) => {
         reject(error);
       });

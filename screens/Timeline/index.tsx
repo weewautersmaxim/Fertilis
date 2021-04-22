@@ -149,7 +149,7 @@ const Timeline = ({ navigation }: any) => {
                     borderBottomWidth: 1,
                   }}
                 >
-                  12/05/2020:
+                  {n.datePlant}
                 </Text>
               </View>
             </View>
@@ -159,11 +159,11 @@ const Timeline = ({ navigation }: any) => {
                   <View style={{ width: 65, height: 65 }}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text style={{ fontSize: 25, color: "#707070" }}>
+                  <Text style={{ fontSize: 22, color: "#707070" }}>
                     {n.activity}
                   </Text>
                   <Text
-                    style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                    style={{ fontSize: 22, color: "#707070", marginRight: 20 }}
                   >
                     {clock(n.plantTimer! / 60)}
                   </Text>

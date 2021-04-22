@@ -3,4 +3,5 @@ export default interface Plant {
   activity?: string;
   plant?: string;
   plantTimer?: number;
+  datePlant?: string;
 }
