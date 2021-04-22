@@ -1,20 +1,22 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Image, View } from "react-native";
 import Tasks from "./screens/Tasks";
 import Plants from "./screens/Plants";
 import Timeline from "./screens/Timeline";
 import { colors } from "./styles/colors/theme";
+import { initPlants } from "./utils/PlantDb";
 
 export default function App() {
+  useEffect(() => {
+    initPlants();
+  }, []);
   const Tab = createBottomTabNavigator();
 
   const customTabOptions = ({ route }: any) => ({
-    tabBarIcon: ({ color, size }: any) => {
-      let iconName = "someting";
-
+    tabBarIcon: ({}: any) => {
       if (route.name === "Tasks") {
         return (
           <View
@@ -76,8 +78,6 @@ export default function App() {
           </View>
         );
       }
-
-      // You can return any component that you like here!
     },
   });
 
@@ -103,12 +103,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

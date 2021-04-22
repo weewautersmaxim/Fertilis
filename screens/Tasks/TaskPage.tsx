@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  ScrollView,
-  Button,
-} from "react-native";
+import { Text, TouchableOpacity, View, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
@@ -62,10 +55,10 @@ const TaskPage = ({ navigation }: any) => {
   };
 
   const removeTasks = async (id: number) => {
-    const res = await taskCRUD.delete(id);
+    await taskCRUD.delete(id);
     getTasks();
   };
-  console.log(TaskState);
+  // console.log(TaskState);
 
   const TaskImage = () => {
     for (let i = 0; i < TaskState.length; i++) {
