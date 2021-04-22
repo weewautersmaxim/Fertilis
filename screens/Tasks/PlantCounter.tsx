@@ -8,6 +8,8 @@ import Logo from "../../Components/Logo";
 import { Timer } from "../../styles/components/Timer";
 import Task from "../../models/Task";
 import { taskCRUD } from "../../utils/db";
+import Plant from "../../models/Plant";
+import { PlantCRUD } from "../../utils/PlantDb";
 
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
@@ -27,6 +29,11 @@ const PlantCounter = ({ navigation, route }: any) => {
     plantTimer: 0,
     unfinished: "",
   });
+  const [detailPlant, SetDetailPlant] = useState<Plant>({
+    activity: "test",
+    plant: "Ivy",
+    plantTimer: 600,
+  });
 
   useEffect(() => {
     getDetail();
@@ -43,6 +50,41 @@ const PlantCounter = ({ navigation, route }: any) => {
   useEffect(() => {
     GetRightImage();
   });
+
+  useEffect(() => {
+    //extra ding
+    console.log(detail.plant);
+    SetDetailPlant((oldNote: Plant) => {
+      oldNote.plant = detail.plant;
+      oldNote.activity = detail.activity;
+      return { ...oldNote };
+    });
+
+    SetDetailPlant((oldNote: Plant) => {
+      if (oldNote.plant == "Ivy") {
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 600;
+          return { ...oldNote };
+        });
+      } else if (detail.plant == "Basil") {
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 1800;
+          return { ...oldNote };
+        });
+      } else if (detail.plant == "Kunal") {
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 3600;
+          return { ...oldNote };
+        });
+      } else {
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 5400;
+          return { ...oldNote };
+        });
+      }
+      return { ...oldNote };
+    });
+  }, [detail]);
 
   //useffects
   // Runs when timerOn value changes to start or stop timer
@@ -93,6 +135,15 @@ const PlantCounter = ({ navigation, route }: any) => {
 
       navigation.navigate("TaskPage");
     }
+  };
+  //second database for saving data
+  const savePlant = async () => {
+    if (detailPlant.activity && detailPlant.plant && detailPlant.plantTimer) {
+      const insert = await PlantCRUD.create(detailPlant);
+    } else {
+      console.log("not saved");
+    }
+    console.log("detail plant", detailPlant);
   };
 
   const GetRightImage = () => {
@@ -163,6 +214,7 @@ const PlantCounter = ({ navigation, route }: any) => {
       displaySecs,
     };
   };
+
   const clockifyPlant = () => {
     let hours = Math.floor(SecondsPlant / 60 / 60);
     let mins = Math.floor((SecondsPlant / 60) % 60);
@@ -191,6 +243,7 @@ const PlantCounter = ({ navigation, route }: any) => {
               oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
               return { ...oldNote };
             });
+            savePlant();
             saveTask();
           }}
         >
