@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, Image, ScrollView } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
@@ -15,13 +22,17 @@ const TaskPage = ({ navigation }: any) => {
   //usestates
   const [TaskState, SetTaskState] = useState<Task[]>([]);
   const [unfinishedTasks, SetunfinishedTasks] = useState<Task[]>([]);
+  const [newTasks, SetNewTasks] = useState<Task[]>([]);
+
+  //
+  const [customOpacity, SetCustomOpacity] = useState(1);
+  const [customHeight, SetCustomHeight] = useState(27);
+  const [customBorder, SetCustomBorder] = useState(2);
+  const [customMargin, SetCustomMargin] = useState(10);
+
   const [taskImage, SetTaskImage] = useState(
     require("../../assets/Plants/plantIcons/Plant2.png")
   );
-
-  useEffect(() => {
-    TaskImage();
-  }, [TaskState]);
 
   useEffect(() => {
     TimerDone();
@@ -36,43 +47,58 @@ const TaskPage = ({ navigation }: any) => {
   //methods
   const getTasks = async () => {
     const { rows }: { rows: SQLResultSetRowList } = await taskCRUD.read.all();
-    const unfinishedrows = await taskCRUD.read.unfinished();
-    const unifinishedTask = (unfinishedrows as any).rows._array;
+    const unfinishedRows = await taskCRUD.read.unfinished();
+    const unifinishedTask = (unfinishedRows as any).rows._array;
+
+    const newRows = await taskCRUD.read.new();
+    const newTasks = (newRows as any).rows._array;
+
     await SetTaskState((rows as any)._array);
 
-    //hier maken we filter aan voor new/unfinished lists
-    let Arraynew = (rows as any)._array;
-    let ArrayUnfinished = [];
-
-    //filter
-    for (let i = 0; i < TaskState.length; i++) {
-      if (TaskState[i].unfinished == "true") {
-        await ArrayUnfinished.push(TaskState[i]);
-        // console.log(Arraynew.pop(TaskState[i]));
-      }
-    }
     SetunfinishedTasks(unifinishedTask);
+    if (unifinishedTask.length == 0) {
+      SetCustomOpacity(0);
+      SetCustomHeight(0);
+      SetCustomBorder(0);
+      SetCustomMargin(0);
+    } else {
+      SetCustomOpacity(1);
+      SetCustomHeight(27);
+      SetCustomBorder(2);
+      SetCustomMargin(10);
+    }
+    SetNewTasks(newTasks);
   };
+
+  //method for removing "unfinished tab" when empty
+  const getStyles = (
+    opacityValue: any,
+    customHeight: any,
+    customBorder: any,
+    customMargin: any
+  ) =>
+    StyleSheet.create({
+      customSection: {
+        opacity: opacityValue,
+        height: customHeight,
+        width: "100%",
+        borderBottomColor: "white",
+        borderBottomWidth: customBorder,
+        marginTop: customMargin,
+      },
+    });
+  const styles = getStyles(
+    customOpacity,
+    customHeight,
+    customBorder,
+    customMargin
+  );
 
   const removeTasks = async (id: number) => {
     await taskCRUD.delete(id);
     getTasks();
   };
-  // console.log(TaskState);
 
-  const TaskImage = () => {
-    for (let i = 0; i < TaskState.length; i++) {
-      if (TaskState[i].plant == "Ivy") {
-        SetTaskImage(require("../../assets/Plants/plantIcons/Plant1.png"));
-      } else if (TaskState[i].plant == "Basil") {
-        SetTaskImage(require("../../assets/Plants/plantIcons/Plant2.png"));
-      } else if (TaskState[i].plant == "Kunal") {
-        SetTaskImage(require("../../assets/Plants/plantIcons/Plant3.png"));
-      } else {
-        SetTaskImage(require("../../assets/Plants/plantIcons/Plant4.png"));
-      }
-    }
-  };
   const plant = (plant: any) => {
     switch (plant) {
       case "Ivy":
@@ -198,7 +224,7 @@ const TaskPage = ({ navigation }: any) => {
       {/* unfinished section */}
       <ScrollView>
         <View style={Tasks.base}>
-          <View style={Tasks.taskSection}>
+          <View style={styles.customSection}>
             <Text style={{ color: "white", fontSize: 18 }}>Unfinished:</Text>
           </View>
           {/* end unfinished section */}
@@ -244,7 +270,7 @@ const TaskPage = ({ navigation }: any) => {
           </View>
           <ScrollView>
             {/* here start tasks */}
-            {TaskState.map((n: Task) => (
+            {newTasks.map((n: Task) => (
               <Swipeable
                 key={n.id}
                 renderLeftActions={leftSwipe}

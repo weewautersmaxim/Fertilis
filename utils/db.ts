@@ -68,14 +68,7 @@ export const taskCRUD = {
       const res = await query(tx, {
         sql:
           "INSERT INTO `task` (id, activity, timer, plant, plantTimer, unfinished) values(?, ?, ?, ?, ?, ?)",
-        args: [
-          null,
-          n.activity,
-          n.timer,
-          n.plant,
-          n.plantTimer,
-          n.unfinished,
-        ],
+        args: [null, n.activity, n.timer, n.plant, n.plantTimer, n.unfinished],
       }).catch((error) => {
         reject(error);
       });
@@ -106,6 +99,21 @@ export const taskCRUD = {
         const db = getDb(),
           tx = await transaction(db);
         let bool = "true";
+        const res = await query(tx, {
+          sql: "SELECT * FROM `task` WHERE unfinished = ?",
+          args: [bool],
+        }).catch((error) => {
+          reject(error);
+        });
+
+        if (res) resolve(res);
+      });
+    },
+    new: (): Promise<SQLResultSet> => {
+      return new Promise(async function (resolve, reject) {
+        const db = getDb(),
+          tx = await transaction(db);
+        let bool = "false";
         const res = await query(tx, {
           sql: "SELECT * FROM `task` WHERE unfinished = ?",
           args: [bool],
