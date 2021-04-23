@@ -248,11 +248,13 @@ const TaskPage = ({ navigation }: any) => {
                   <View style={{ width: 65, height: 65 }}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text style={{ fontSize: 25, color: "#707070" }}>
+                  <Text
+                    style={{ fontSize: 23, color: "#707070", width: "40%" }}
+                  >
                     {n.activity}
                   </Text>
                   <Text
-                    style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                    style={{ fontSize: 23, color: "#707070", marginRight: 20 }}
                   >
                     {clock(n.timer)}
                   </Text>
@@ -288,11 +290,17 @@ const TaskPage = ({ navigation }: any) => {
                   <View style={{ width: 65, height: 65 }}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text style={{ fontSize: 25, color: "#707070" }}>
+                  <Text
+                    style={{
+                      fontSize: 23,
+                      color: "#707070",
+                      width: "40%",
+                    }}
+                  >
                     {n.activity}
                   </Text>
                   <Text
-                    style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                    style={{ fontSize: 23, color: "#707070", marginRight: 20 }}
                   >
                     {clock(n.timer)}
                   </Text>

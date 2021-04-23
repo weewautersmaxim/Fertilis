@@ -22,7 +22,7 @@ const AddPage = ({ navigation }: any) => {
     timer: 240,
     plant: "Ivy",
     plantTimer: 240,
-    unfinished: "false"
+    unfinished: "false",
   });
   //special usestates for every plant
   //for changing opacity for each individual plant
@@ -153,6 +153,7 @@ const AddPage = ({ navigation }: any) => {
       </View>
       <View style={{ alignItems: "center" }}>
         <TextInput
+          maxLength={150}
           placeholder="write your task!"
           style={{
             backgroundColor: "white",
@@ -199,7 +200,7 @@ const AddPage = ({ navigation }: any) => {
       >
         <Slider
           style={{ width: "90%" }}
-          minimumValue={10}
+          minimumValue={0.1}
           maximumValue={240}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#1A9375"

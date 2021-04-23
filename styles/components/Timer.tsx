@@ -3,5 +3,6 @@ export const Timer = StyleSheet.create({
   titel: {
     color: "white",
     fontSize: 30,
+    textAlign: "center",
   },
 });

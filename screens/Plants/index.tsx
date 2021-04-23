@@ -560,7 +560,7 @@ const Plants = ({ navigation }: any) => {
                       width: "100%",
                       height: "100%",
                     }}
-                    source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
+                    source={require("../../assets/achievements/achievement1.png")}
                   />
                 </View>
               </View>
@@ -594,7 +594,7 @@ const Plants = ({ navigation }: any) => {
                       width: "100%",
                       height: "100%",
                     }}
-                    source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
+                    source={require("../../assets/achievements/achievement2.png")}
                   />
                 </View>
               </View>
@@ -628,7 +628,7 @@ const Plants = ({ navigation }: any) => {
                       width: "100%",
                       height: "100%",
                     }}
-                    source={require("../../assets/c7805ee9aa1a16baaa33a7b1be2f220e.png")}
+                    source={require("../../assets/achievements/achievement3.png")}
                   />
                 </View>
               </View>
