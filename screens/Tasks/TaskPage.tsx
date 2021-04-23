@@ -196,85 +196,87 @@ const TaskPage = ({ navigation }: any) => {
       </View>
 
       {/* unfinished section */}
-      <View style={Tasks.base}>
-        <View style={Tasks.taskSection}>
-          <Text style={{ color: "white", fontSize: 18 }}>Unfinished:</Text>
-        </View>
-        {/* end unfinished section */}
-        <ScrollView>
-          {/* here start tasks */}
-          {unfinishedTasks.map((n: Task) => (
-            <Swipeable
-              key={n.id}
-              renderLeftActions={leftSwipe}
-              onSwipeableLeftOpen={() => {
-                if (n.id) removeTasks(+n.id);
-              }}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("PlantCounter", { id: n.id })
-                }
-                style={Tasks.task}
+      <ScrollView>
+        <View style={Tasks.base}>
+          <View style={Tasks.taskSection}>
+            <Text style={{ color: "white", fontSize: 18 }}>Unfinished:</Text>
+          </View>
+          {/* end unfinished section */}
+          <ScrollView>
+            {/* here start tasks */}
+            {unfinishedTasks.map((n: Task) => (
+              <Swipeable
                 key={n.id}
+                renderLeftActions={leftSwipe}
+                onSwipeableLeftOpen={() => {
+                  if (n.id) removeTasks(+n.id);
+                }}
               >
-                <View style={{ width: 65, height: 65 }}>
-                  <Image style={Tasks.taskImage} source={plant(n.plant)} />
-                </View>
-                <Text style={{ fontSize: 25, color: "#707070" }}>
-                  {n.activity}
-                </Text>
-                <Text
-                  style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("PlantCounter", { id: n.id })
+                  }
+                  style={Tasks.task}
+                  key={n.id}
                 >
-                  {clock(n.timer)}
-                </Text>
-              </TouchableOpacity>
-            </Swipeable>
-          ))}
+                  <View style={{ width: 65, height: 65 }}>
+                    <Image style={Tasks.taskImage} source={plant(n.plant)} />
+                  </View>
+                  <Text style={{ fontSize: 25, color: "#707070" }}>
+                    {n.activity}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                  >
+                    {clock(n.timer)}
+                  </Text>
+                </TouchableOpacity>
+              </Swipeable>
+            ))}
+            {/* end tasks */}
+          </ScrollView>
           {/* end tasks */}
-        </ScrollView>
-        {/* end tasks */}
-      </View>
-      {/* tasks section */}
-      <View style={Tasks.base}>
-        <View style={Tasks.taskSection}>
-          <Text style={{ color: "white", fontSize: 18 }}>New:</Text>
         </View>
-        <ScrollView>
-          {/* here start tasks */}
-          {TaskState.map((n: Task) => (
-            <Swipeable
-              key={n.id}
-              renderLeftActions={leftSwipe}
-              onSwipeableLeftOpen={() => {
-                if (n.id) removeTasks(+n.id);
-              }}
-            >
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("PlantCounter", { id: n.id })
-                }
-                style={Tasks.task}
+        {/* tasks section */}
+        <View style={Tasks.base}>
+          <View style={Tasks.taskSection}>
+            <Text style={{ color: "white", fontSize: 18 }}>New:</Text>
+          </View>
+          <ScrollView>
+            {/* here start tasks */}
+            {TaskState.map((n: Task) => (
+              <Swipeable
                 key={n.id}
+                renderLeftActions={leftSwipe}
+                onSwipeableLeftOpen={() => {
+                  if (n.id) removeTasks(+n.id);
+                }}
               >
-                <View style={{ width: 65, height: 65 }}>
-                  <Image style={Tasks.taskImage} source={plant(n.plant)} />
-                </View>
-                <Text style={{ fontSize: 25, color: "#707070" }}>
-                  {n.activity}
-                </Text>
-                <Text
-                  style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("PlantCounter", { id: n.id })
+                  }
+                  style={Tasks.task}
+                  key={n.id}
                 >
-                  {clock(n.timer)}
-                </Text>
-              </TouchableOpacity>
-            </Swipeable>
-          ))}
-          {/* end tasks */}
-        </ScrollView>
-      </View>
+                  <View style={{ width: 65, height: 65 }}>
+                    <Image style={Tasks.taskImage} source={plant(n.plant)} />
+                  </View>
+                  <Text style={{ fontSize: 25, color: "#707070" }}>
+                    {n.activity}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 25, color: "#707070", marginRight: 20 }}
+                  >
+                    {clock(n.timer)}
+                  </Text>
+                </TouchableOpacity>
+              </Swipeable>
+            ))}
+            {/* end tasks */}
+          </ScrollView>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
