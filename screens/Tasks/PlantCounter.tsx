@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, Image } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  Button,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { background } from "../../styles/colors/theme";
@@ -11,7 +18,7 @@ import { taskCRUD } from "../../utils/db";
 import Plant from "../../models/Plant";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { ScrollView } from "react-native-gesture-handler";
-import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
+import * as Notifications from "expo-notifications";
 import {
   clockify,
   clockifyPlant,
@@ -20,6 +27,14 @@ import {
   activate,
   deactivate,
 } from "../../Components/PlantCounter/keep-awake_Expo";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
@@ -100,19 +115,30 @@ const PlantCounter = ({ navigation, route }: any) => {
   //useffects
   // Runs when timerOn value changes to start or stop timer
   useEffect(() => {
-    const interval = setInterval(() => {
+    let timerFix = false;
+    const interval = setInterval(async () => {
       if (timerOn) {
         activate();
         SetButtonName("Stop");
         setSecondsLeft((secs) => {
           if (secs > 0) return secs - 1;
           else {
+            //why timerfix? for timer to work. to program needs to devide. result is a float number.
+            // it needs to count '0' twice since first time is not 0 nor 1, but a float 0 (0.1). this 'timerfix' makes sure that only 1 message is send
+            if (timerFix == false) {
+              timerFix = true;
+            } else {
+              schedulePushNotification();
+            }
+
             //if timer hits 0, force update 0
+            clearInterval(interval);
             setDetail((oldNote: Task) => {
               oldNote.timer = 0;
               oldNote.plantTimer = 0;
               return { ...oldNote };
             });
+
             return 0;
           }
         });
@@ -127,7 +153,7 @@ const PlantCounter = ({ navigation, route }: any) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
-    
+
     if (detail.timer == 0) {
       savePlant();
       saveTask();
@@ -142,7 +168,15 @@ const PlantCounter = ({ navigation, route }: any) => {
       if (timerOn) {
         setSecondsPlant((secs) => {
           if (secs > 0) return secs - 1;
-          else return 0;
+          else {
+            //if timer hits 0, force update 0
+            setDetail((oldNote: Task) => {
+              oldNote.plantTimer = 0;
+              return { ...oldNote };
+            });
+            clearInterval(interval);
+            return 0;
+          }
         });
       }
     }, 1000);
@@ -152,6 +186,17 @@ const PlantCounter = ({ navigation, route }: any) => {
     });
     return () => clearInterval(interval);
   }, [timerOn]);
+
+  //notifications
+  function schedulePushNotification() {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "timer completed",
+        body: "You have succesfully completed the timer!",
+      },
+      trigger: { seconds: 1 },
+    });
+  }
 
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
@@ -345,12 +390,13 @@ const PlantCounter = ({ navigation, route }: any) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => {
+          onPress={async () => {
             setTimerOn((timerOn) => !timerOn);
             setDetail((oldNote: Task) => {
               oldNote.unfinished = "true";
               return { ...oldNote };
             });
+            // await schedulePushNotification();
           }}
           style={{
             justifyContent: "center",
