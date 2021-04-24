@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
+  Share,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
@@ -198,6 +199,24 @@ const Plants = ({ navigation }: any) => {
     }
   };
 
+  const onShare = async (Achievement: string) => {
+    try {
+      const result = await Share.share({
+        message: Achievement,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -540,7 +559,12 @@ const Plants = ({ navigation }: any) => {
           }}
         >
           {/* achievement 1 */}
-          <TouchableOpacity style={{ width: 100 }}>
+          <TouchableOpacity
+            style={{ width: 100 }}
+            onPress={() => {
+              onShare("I just got a total of 5 plants!");
+            }}
+          >
             <View style={styles.opacityAchievement1}>
               <View
                 style={{
