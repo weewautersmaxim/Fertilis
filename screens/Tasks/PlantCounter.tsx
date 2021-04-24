@@ -11,10 +11,15 @@ import { taskCRUD } from "../../utils/db";
 import Plant from "../../models/Plant";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { ScrollView } from "react-native-gesture-handler";
+import { activateKeepAwake, deactivateKeepAwake } from "expo-keep-awake";
 import {
   clockify,
   clockifyPlant,
 } from "../../Components/PlantCounter/clockify";
+import {
+  activate,
+  deactivate,
+} from "../../Components/PlantCounter/keep-awake_Expo";
 
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
@@ -57,7 +62,6 @@ const PlantCounter = ({ navigation, route }: any) => {
   });
 
   useEffect(() => {
-    //extra ding
     let today = new Date().toLocaleDateString();
 
     SetDetailPlant((oldNote: Plant) => {
@@ -98,6 +102,7 @@ const PlantCounter = ({ navigation, route }: any) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (timerOn) {
+        activate();
         SetButtonName("Stop");
         setSecondsLeft((secs) => {
           if (secs > 0) return secs - 1;
@@ -111,13 +116,18 @@ const PlantCounter = ({ navigation, route }: any) => {
             return 0;
           }
         });
-      } else SetButtonName("Start");
+      } else {
+        deactivate();
+        SetButtonName("Start");
+        clearInterval(interval);
+      }
     }, 1000);
 
     setDetail((oldNote: Task) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
+    
     if (detail.timer == 0) {
       savePlant();
       saveTask();
@@ -228,6 +238,7 @@ const PlantCounter = ({ navigation, route }: any) => {
       setSecondsPlant(planttime);
     }
   };
+
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
