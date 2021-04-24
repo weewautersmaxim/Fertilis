@@ -200,7 +200,7 @@ const AddPage = ({ navigation }: any) => {
       >
         <Slider
           style={{ width: "90%" }}
-          minimumValue={0.1}
+          minimumValue={10}
           maximumValue={240}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#1A9375"

@@ -11,6 +11,10 @@ import { taskCRUD } from "../../utils/db";
 import Plant from "../../models/Plant";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { ScrollView } from "react-native-gesture-handler";
+import {
+  clockify,
+  clockifyPlant,
+} from "../../Components/PlantCounter/clockify";
 
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
@@ -220,41 +224,10 @@ const PlantCounter = ({ navigation, route }: any) => {
       setSecondsLeft(time);
     }
     if (detail.plantTimer) {
-      let planttime = 5;
-      // let planttime = detail.plantTimer;
+      let planttime = detail.plantTimer;
       setSecondsPlant(planttime);
     }
   };
-
-  //methods
-  const clockify = () => {
-    let hours = Math.floor(secondsLeft / 60 / 60);
-    let mins = Math.floor((secondsLeft / 60) % 60);
-    let seconds = Math.floor(secondsLeft % 60);
-    let displayHours = hours < 10 ? `0${hours}` : hours;
-    let displayMins = mins < 10 ? `0${mins}` : mins;
-    let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-    return {
-      displayHours,
-      displayMins,
-      displaySecs,
-    };
-  };
-
-  const clockifyPlant = () => {
-    let hours = Math.floor(SecondsPlant / 60 / 60);
-    let mins = Math.floor((SecondsPlant / 60) % 60);
-    let seconds = Math.floor(SecondsPlant % 60);
-    let displayHours = hours < 10 ? `0${hours}` : hours;
-    let displayMins = mins < 10 ? `0${mins}` : mins;
-    let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-    return {
-      displayHours,
-      displayMins,
-      displaySecs,
-    };
-  };
-
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -307,8 +280,9 @@ const PlantCounter = ({ navigation, route }: any) => {
           >
             <Text style={Timer.titel}>{detail?.activity}</Text>
             <Text>
-              {clockifyPlant().displayHours}:{clockifyPlant().displayMins}:{""}
-              {clockifyPlant().displaySecs}
+              {clockifyPlant(SecondsPlant).displayHours}:
+              {clockifyPlant(SecondsPlant).displayMins}:{""}
+              {clockifyPlant(SecondsPlant).displaySecs}
             </Text>
           </View>
         </View>
@@ -354,8 +328,9 @@ const PlantCounter = ({ navigation, route }: any) => {
           }}
         >
           <Text style={{ color: "white", fontSize: 28 }}>
-            {clockify().displayHours}:{clockify().displayMins}:{""}
-            {clockify().displaySecs}
+            {clockify(secondsLeft).displayHours}:
+            {clockify(secondsLeft).displayMins}:{""}
+            {clockify(secondsLeft).displaySecs}
           </Text>
         </View>
         <TouchableOpacity
