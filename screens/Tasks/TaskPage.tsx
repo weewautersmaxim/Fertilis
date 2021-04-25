@@ -17,10 +17,10 @@ import { Tasks } from "../../styles/components/TaskPage/Tasks";
 import { taskCRUD } from "../../utils/Db";
 import { useFocusEffect } from "@react-navigation/native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { getStyles } from "../../Components/TaskPage/CustomStyle";
 import { plant } from "../../Components/TaskPage/GetPlant";
 import { leftSwipe } from "../../Components/TaskPage/LeftSwipe";
 import { clock } from "../../Components/TaskPage/Clockify";
+import { getStylesTasks } from "../../Components/General/CustomStyle";
 
 const TaskPage = ({ navigation }: any) => {
   //useStates
@@ -62,7 +62,7 @@ const TaskPage = ({ navigation }: any) => {
     SetNewTasks(newTasks);
   };
 
-  const styles = getStyles(customDisplay);
+  const styles = getStylesTasks(customDisplay);
 
   const removeTasks = async (id: number) => {
     await taskCRUD.delete(id);

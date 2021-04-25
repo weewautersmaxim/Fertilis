@@ -4,8 +4,6 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Button,
-  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
