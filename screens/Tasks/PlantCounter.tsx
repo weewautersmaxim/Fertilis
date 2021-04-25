@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, Image } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  Button,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { background } from "../../styles/colors/theme";
@@ -10,10 +17,27 @@ import Task from "../../models/Task";
 import { taskCRUD } from "../../utils/db";
 import Plant from "../../models/Plant";
 import { PlantCRUD } from "../../utils/PlantDb";
+import { ScrollView } from "react-native-gesture-handler";
+import * as Notifications from "expo-notifications";
+import {
+  clockify,
+  clockifyPlant,
+} from "../../Components/PlantCounter/clockify";
+import {
+  activate,
+  deactivate,
+} from "../../Components/PlantCounter/keep-awake_Expo";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
-  const [animation, setanimation] = useState(true);
   const [secondsLeft, setSecondsLeft] = useState(5);
   const [SecondsPlant, setSecondsPlant] = useState(5);
   const [timerOn, setTimerOn] = useState(false);
@@ -24,7 +48,7 @@ const PlantCounter = ({ navigation, route }: any) => {
   //SQLiteDatabase
   const [detail, setDetail] = useState<Task>({
     activity: "",
-    timer: 0,
+    timer: 5,
     plant: "",
     plantTimer: 0,
     unfinished: "",
@@ -53,7 +77,6 @@ const PlantCounter = ({ navigation, route }: any) => {
   });
 
   useEffect(() => {
-    //extra ding
     let today = new Date().toLocaleDateString();
 
     SetDetailPlant((oldNote: Plant) => {
@@ -92,19 +115,50 @@ const PlantCounter = ({ navigation, route }: any) => {
   //useffects
   // Runs when timerOn value changes to start or stop timer
   useEffect(() => {
-    const interval = setInterval(() => {
+    let timerFix = false;
+    const interval = setInterval(async () => {
       if (timerOn) {
+        activate();
         SetButtonName("Stop");
         setSecondsLeft((secs) => {
           if (secs > 0) return secs - 1;
-          else return 0;
+          else {
+            //why timerfix? for timer to work. to program needs to devide. result is a float number.
+            // it needs to count '0' twice since first time is not 0 nor 1, but a float 0 (0.1). this 'timerfix' makes sure that only 1 message is send
+            if (timerFix == false) {
+              timerFix = true;
+            } else {
+              schedulePushNotification();
+            }
+
+            //if timer hits 0, force update 0
+            clearInterval(interval);
+            setDetail((oldNote: Task) => {
+              oldNote.timer = 0;
+              oldNote.plantTimer = 0;
+              return { ...oldNote };
+            });
+
+            return 0;
+          }
         });
-      } else SetButtonName("Start");
+      } else {
+        deactivate();
+        SetButtonName("Start");
+        clearInterval(interval);
+      }
     }, 1000);
+
     setDetail((oldNote: Task) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
+
+    if (detail.timer == 0) {
+      savePlant();
+      saveTask();
+    }
+
     return () => clearInterval(interval);
   }, [timerOn]);
 
@@ -114,7 +168,15 @@ const PlantCounter = ({ navigation, route }: any) => {
       if (timerOn) {
         setSecondsPlant((secs) => {
           if (secs > 0) return secs - 1;
-          else return 0;
+          else {
+            //if timer hits 0, force update 0
+            setDetail((oldNote: Task) => {
+              oldNote.plantTimer = 0;
+              return { ...oldNote };
+            });
+            clearInterval(interval);
+            return 0;
+          }
         });
       }
     }, 1000);
@@ -125,6 +187,17 @@ const PlantCounter = ({ navigation, route }: any) => {
     return () => clearInterval(interval);
   }, [timerOn]);
 
+  //notifications
+  function schedulePushNotification() {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "timer completed",
+        body: "You have succesfully completed the timer!",
+      },
+      trigger: { seconds: 1 },
+    });
+  }
+
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
     const dbTask = (res as any).rows._array[0];
@@ -133,8 +206,7 @@ const PlantCounter = ({ navigation, route }: any) => {
 
   const saveTask = async () => {
     if (detail?.activity && detail.id) {
-      console.log("task wordt geupdate");
-      const res = await taskCRUD.update(detail);
+      await taskCRUD.update(detail);
 
       navigation.navigate("TaskPage");
     }
@@ -142,9 +214,7 @@ const PlantCounter = ({ navigation, route }: any) => {
   //second database for saving data
   const savePlant = async () => {
     if (detailPlant.activity && detailPlant.plant && detailPlant.plantTimer) {
-      console.log(detail.plantTimer);
       if (detail.plantTimer == 0) {
-        console.log("plant wordt opgeslagen");
         await PlantCRUD.create(detailPlant);
       }
     } else {
@@ -159,8 +229,10 @@ const PlantCounter = ({ navigation, route }: any) => {
         SetImg(require("../../assets/Plants/plant1_A.png"));
       } else if (SecondsPlant >= 100) {
         SetImg(require("../../assets/Plants/plant1_B.png"));
-      } else {
+      } else if (SecondsPlant > 0) {
         SetImg(require("../../assets/Plants/plant1_C.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant1_D.png"));
       }
     }
     //if basil
@@ -169,8 +241,10 @@ const PlantCounter = ({ navigation, route }: any) => {
         SetImg(require("../../assets/Plants/plant2_A.png"));
       } else if (SecondsPlant >= 150) {
         SetImg(require("../../assets/Plants/plant2_B.png"));
-      } else {
+      } else if (SecondsPlant > 0) {
         SetImg(require("../../assets/Plants/plant2_C.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant2_D.png"));
       }
     }
     //if kunal
@@ -179,8 +253,10 @@ const PlantCounter = ({ navigation, route }: any) => {
         SetImg(require("../../assets/Plants/plant3_A.png"));
       } else if (SecondsPlant >= 200) {
         SetImg(require("../../assets/Plants/plant3_B.png"));
-      } else {
+      } else if (SecondsPlant > 0) {
         SetImg(require("../../assets/Plants/plant3_C.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant3_D.png"));
       }
     }
     //if Dahlia
@@ -189,8 +265,10 @@ const PlantCounter = ({ navigation, route }: any) => {
         SetImg(require("../../assets/Plants/plant4_A.png"));
       } else if (SecondsPlant >= 300) {
         SetImg(require("../../assets/Plants/plant4_B.png"));
-      } else {
+      } else if (SecondsPlant > 0) {
         SetImg(require("../../assets/Plants/plant4_C.png"));
+      } else {
+        SetImg(require("../../assets/Plants/plant4_D.png"));
       }
     }
   };
@@ -201,38 +279,9 @@ const PlantCounter = ({ navigation, route }: any) => {
       setSecondsLeft(time);
     }
     if (detail.plantTimer) {
-      let planttime = 1;
+      let planttime = detail.plantTimer;
       setSecondsPlant(planttime);
     }
-  };
-
-  //methods
-  const clockify = () => {
-    let hours = Math.floor(secondsLeft / 60 / 60);
-    let mins = Math.floor((secondsLeft / 60) % 60);
-    let seconds = Math.floor(secondsLeft % 60);
-    let displayHours = hours < 10 ? `0${hours}` : hours;
-    let displayMins = mins < 10 ? `0${mins}` : mins;
-    let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-    return {
-      displayHours,
-      displayMins,
-      displaySecs,
-    };
-  };
-
-  const clockifyPlant = () => {
-    let hours = Math.floor(SecondsPlant / 60 / 60);
-    let mins = Math.floor((SecondsPlant / 60) % 60);
-    let seconds = Math.floor(SecondsPlant % 60);
-    let displayHours = hours < 10 ? `0${hours}` : hours;
-    let displayMins = mins < 10 ? `0${mins}` : mins;
-    let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-    return {
-      displayHours,
-      displayMins,
-      displaySecs,
-    };
   };
 
   return (
@@ -245,10 +294,6 @@ const PlantCounter = ({ navigation, route }: any) => {
             flexDirection: "row",
           }}
           onPress={() => {
-            setDetail((oldNote: Task) => {
-              oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
-              return { ...oldNote };
-            });
             savePlant();
             saveTask();
           }}
@@ -279,90 +324,101 @@ const PlantCounter = ({ navigation, route }: any) => {
           }}
         ></TouchableOpacity>
       </View>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-      >
-        <Text style={Timer.titel}>{detail?.activity}</Text>
-        <Text>
-          {clockifyPlant().displayHours}:{clockifyPlant().displayMins}:{""}
-          {clockifyPlant().displaySecs}
-        </Text>
-      </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{ alignItems: "center", backgroundColor: "red", width: "85%" }}
-        >
-          {/* lottie file */}
-          <LottieView
-            style={{ width: "100%", position: "absolute" }}
-            source={require("../../assets/Lottie/Breathing.json")}
-            autoPlay={animation}
-          ></LottieView>
+      <ScrollView>
+        <View style={{ alignItems: "center" }}>
           <View
             style={{
-              width: 200,
-              height: 200,
-              marginTop: 68,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
+              width: "80%",
             }}
           >
-            <Image
-              style={{
-                resizeMode: "contain",
-                flex: 1,
-                width: "100%",
-                height: "100%",
-              }}
-              source={Img}
-            ></Image>
+            <Text style={Timer.titel}>{detail?.activity}</Text>
+            <Text>
+              {clockifyPlant(SecondsPlant).displayHours}:
+              {clockifyPlant(SecondsPlant).displayMins}:{""}
+              {clockifyPlant(SecondsPlant).displaySecs}
+            </Text>
           </View>
         </View>
-      </View>
-      {/* timer */}
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 80,
-        }}
-      >
-        <Text style={{ color: "white", fontSize: 28 }}>
-          {clockify().displayHours}:{clockify().displayMins}:{""}
-          {clockify().displaySecs}
-        </Text>
-      </View>
-      <TouchableOpacity
-        onPress={() => {
-          setanimation(true);
-          setTimerOn((timerOn) => !timerOn);
-          setDetail((oldNote: Task) => {
-            oldNote.unfinished = "true";
-            return { ...oldNote };
-          });
-        }}
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: "red",
+              width: "85%",
+            }}
+          >
+            {/* lottie file */}
+            <LottieView
+              style={{ width: "100%", position: "absolute" }}
+              source={require("../../assets/Lottie/Breathing.json")}
+              autoPlay={true}
+            ></LottieView>
+            <View
+              style={{
+                width: 200,
+                height: 200,
+                marginTop: 68,
+              }}
+            >
+              <Image
+                style={{
+                  resizeMode: "contain",
+                  flex: 1,
+                  width: "100%",
+                  height: "100%",
+                }}
+                source={Img}
+              ></Image>
+            </View>
+          </View>
+        </View>
+        {/* timer */}
         <View
           style={{
-            backgroundColor: "#68D2AE",
-            width: 120,
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: 5,
+            marginTop: 80,
           }}
         >
-          <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
-            {buttonName}
+          <Text style={{ color: "white", fontSize: 28 }}>
+            {clockify(secondsLeft).displayHours}:
+            {clockify(secondsLeft).displayMins}:{""}
+            {clockify(secondsLeft).displaySecs}
           </Text>
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={async () => {
+            setTimerOn((timerOn) => !timerOn);
+            setDetail((oldNote: Task) => {
+              oldNote.unfinished = "true";
+              return { ...oldNote };
+            });
+            // await schedulePushNotification();
+          }}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#68D2AE",
+              width: 120,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
+              {buttonName}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };
