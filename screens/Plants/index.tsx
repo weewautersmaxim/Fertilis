@@ -7,6 +7,7 @@ import {
   ImageBackground,
   StyleSheet,
   Share,
+  LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
@@ -236,6 +237,9 @@ const Plants = ({ navigation }: any) => {
       SetAchievOpacity3(0.4);
     }
   };
+
+  //when starting app, no tasks exist, hide error that he can't find any tasks yet...
+  LogBox.ignoreAllLogs();
 
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
