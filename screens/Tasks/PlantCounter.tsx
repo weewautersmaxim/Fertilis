@@ -130,7 +130,7 @@ const PlantCounter = ({ navigation, route }: any) => {
             } else {
               schedulePushNotification();
             }
-
+            console.log("tzs");
             //if timer hits 0, force update 0
             clearInterval(interval);
             setDetail((oldNote: Task) => {
@@ -153,8 +153,10 @@ const PlantCounter = ({ navigation, route }: any) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
+    console.log("detail timer ", detail.timer);
 
     if (detail.timer == 0) {
+      console.log("test");
       savePlant();
       saveTask();
     }
@@ -170,10 +172,11 @@ const PlantCounter = ({ navigation, route }: any) => {
           if (secs > 0) return secs - 1;
           else {
             //if timer hits 0, force update 0
-            setDetail((oldNote: Task) => {
-              oldNote.plantTimer = 0;
-              return { ...oldNote };
-            });
+            // setDetail((oldNote: Task) => {
+            //   oldNote.plantTimer = 0;
+            //   oldNote.timer = detail.timer;
+            //   return { ...oldNote };
+            // });
             clearInterval(interval);
             return 0;
           }
@@ -207,7 +210,6 @@ const PlantCounter = ({ navigation, route }: any) => {
   const saveTask = async () => {
     if (detail?.activity && detail.id) {
       await taskCRUD.update(detail);
-
       navigation.navigate("TaskPage");
     }
   };
@@ -294,7 +296,6 @@ const PlantCounter = ({ navigation, route }: any) => {
             flexDirection: "row",
           }}
           onPress={() => {
-            savePlant();
             saveTask();
           }}
         >

@@ -7,6 +7,7 @@ import {
   TextInput,
   Slider,
   SafeAreaViewBase,
+  LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
@@ -83,6 +84,9 @@ const Timeline = ({ navigation }: any) => {
     }
     return time;
   };
+
+  //when starting app, no tasks exist, hide error that he can't find any tasks yet...
+  LogBox.ignoreAllLogs();
 
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
