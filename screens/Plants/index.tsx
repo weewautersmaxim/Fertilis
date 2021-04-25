@@ -16,8 +16,46 @@ import { PlantCRUD } from "../../utils/PlantDb";
 import { SQLResultSetRowList } from "expo-sqlite";
 import Plant from "../../models/Plant";
 import { useFocusEffect } from "@react-navigation/native";
+import { Asset } from "expo-asset";
+import * as Sharing from "expo-sharing";
 
 const Plants = ({ navigation }: any) => {
+  const [image, setImage] = useState<Asset | null>(null);
+  const [achievement, setAchievement] = useState(
+    require("../../assets/achievements/achievement2.png")
+  );
+  useEffect(() => {
+    ImageDownload();
+  }, []);
+
+  useEffect(() => {
+    ImageDownload();
+  }, [achievement]);
+
+  // useEffect(() => {
+  //   openShareDialogAsync();
+  // }, [image]);
+
+  const ImageDownload = () => {
+    const imageDownload = Asset.fromModule(achievement);
+    imageDownload.downloadAsync();
+    setImage(imageDownload);
+  };
+
+  const openShareDialogAsync = async () => {
+    if (!(await Sharing.isAvailableAsync())) {
+      alert(`haring isn't available on your platform`);
+      return;
+    }
+    const messageText = "Text that you want to share goes here";
+    let options = {
+      dialogTitle: messageText,
+    };
+    const url = image?.localUri!;
+
+    await Sharing.shareAsync(url, options);
+  };
+
   //useStates
   const [plantState, SetPlantState] = useState<Plant[]>([]);
 
@@ -199,24 +237,6 @@ const Plants = ({ navigation }: any) => {
     }
   };
 
-  const onShare = async (Achievement: string) => {
-    try {
-      const result = await Share.share({
-        message: Achievement,
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -562,7 +582,10 @@ const Plants = ({ navigation }: any) => {
           <TouchableOpacity
             style={{ width: 100 }}
             onPress={() => {
-              onShare("I just got a total of 5 plants!");
+              setAchievement(
+                require("../../assets/achievements/achievement1.png")
+              );
+              openShareDialogAsync();
             }}
           >
             <View style={styles.opacityAchievement1}>
@@ -598,7 +621,15 @@ const Plants = ({ navigation }: any) => {
             </View>
           </TouchableOpacity>
           {/* achievement 2 */}
-          <TouchableOpacity style={{ width: 100 }}>
+          <TouchableOpacity
+            style={{ width: 100 }}
+            onPress={() => {
+              setAchievement(
+                require("../../assets/achievements/achievement2.png")
+              );
+              openShareDialogAsync();
+            }}
+          >
             <View style={styles.opacityAchievement2}>
               <View
                 style={{
