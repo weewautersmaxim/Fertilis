@@ -12,9 +12,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Plant from "../../models/Plant";
-import { background } from "../../styles/colors/theme";
-import { header } from "../../styles/components/header";
-import { Tasks } from "../../styles/components/Tasks";
+import { background } from "../../styles/colors/Theme";
+import { header } from "../../styles/components/general/StackHeader";
+import { Tasks } from "../../styles/components/TaskPage/Tasks";
 import { SQLResultSetRowList } from "expo-sqlite";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { useFocusEffect } from "@react-navigation/native";

@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
-import { background } from "../../styles/colors/theme";
-import { header } from "../../styles/components/header";
+
+import { header } from "../../styles/components/general/StackHeader";
 import Logo from "../../Components/Logo";
-import { Timer } from "../../styles/components/Timer";
+import { Timer } from "../../styles/components/PlantCounterPage/Timer";
 import Task from "../../models/Task";
-import { taskCRUD } from "../../utils/db";
+import { taskCRUD } from "../../utils/Db";
 import Plant from "../../models/Plant";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,11 +22,12 @@ import * as Notifications from "expo-notifications";
 import {
   clockify,
   clockifyPlant,
-} from "../../Components/PlantCounter/clockify";
+} from "../../Components/PlantCounterPage/clockify";
 import {
   activate,
   deactivate,
-} from "../../Components/PlantCounter/keep-awake_Expo";
+} from "../../Components/PlantCounterPage/keep-awake_Expo";
+import { background } from "../../styles/colors/Theme";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -86,30 +87,30 @@ const PlantCounter = ({ navigation, route }: any) => {
       return { ...oldNote };
     });
 
-    SetDetailPlant((oldNote: Plant) => {
-      if (oldNote.plant == "Ivy") {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 600;
-          return { ...oldNote };
-        });
-      } else if (detail.plant == "Basil") {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 1800;
-          return { ...oldNote };
-        });
-      } else if (detail.plant == "Kunal") {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 3600;
-          return { ...oldNote };
-        });
-      } else {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 5400;
-          return { ...oldNote };
-        });
-      }
-      return { ...oldNote };
-    });
+    // SetDetailPlant((oldNote: Plant) => {
+    //   if (oldNote.plant == "Ivy") {
+    //     SetDetailPlant((oldNote: Plant) => {
+    //       oldNote.plantTimer = 10;
+    //       return { ...oldNote };
+    //     });
+    //   } else if (detail.plant == "Basil") {
+    //     SetDetailPlant((oldNote: Plant) => {
+    //       oldNote.plantTimer = 1800;
+    //       return { ...oldNote };
+    //     });
+    //   } else if (detail.plant == "Kunal") {
+    //     SetDetailPlant((oldNote: Plant) => {
+    //       oldNote.plantTimer = 3600;
+    //       return { ...oldNote };
+    //     });
+    //   } else {
+    //     SetDetailPlant((oldNote: Plant) => {
+    //       oldNote.plantTimer = 5400;
+    //       return { ...oldNote };
+    //     });
+    //   }
+    //   return { ...oldNote };
+    // });
   }, [detail]);
 
   //useffects
@@ -130,7 +131,6 @@ const PlantCounter = ({ navigation, route }: any) => {
             } else {
               schedulePushNotification();
             }
-            console.log("tzs");
             //if timer hits 0, force update 0
             clearInterval(interval);
             setDetail((oldNote: Task) => {
@@ -153,10 +153,8 @@ const PlantCounter = ({ navigation, route }: any) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
-    console.log("detail timer ", detail.timer);
 
     if (detail.timer == 0) {
-      console.log("test");
       savePlant();
       saveTask();
     }
@@ -282,6 +280,7 @@ const PlantCounter = ({ navigation, route }: any) => {
     }
     if (detail.plantTimer) {
       let planttime = detail.plantTimer;
+      // let planttime = 2;
       setSecondsPlant(planttime);
     }
   };
@@ -318,13 +317,11 @@ const PlantCounter = ({ navigation, route }: any) => {
 
         <TouchableOpacity
           style={{
-            justifyContent: "flex-end",
             width: "33%",
-            flexDirection: "row",
-            alignItems: "center",
           }}
         ></TouchableOpacity>
       </View>
+      {/* end header */}
       <ScrollView>
         <View style={{ alignItems: "center" }}>
           <View

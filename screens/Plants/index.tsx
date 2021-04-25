@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
-import { background } from "../../styles/colors/theme";
-import { header } from "../../styles/components/header";
+import { background } from "../../styles/colors/Theme";
+import { header } from "../../styles/components/general/StackHeader";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { SQLResultSetRowList } from "expo-sqlite";
 import Plant from "../../models/Plant";

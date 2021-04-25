@@ -1,7 +1,6 @@
 import React from "react";
-import { header } from "../styles/components/header";
 import { Image, View, Text } from "react-native";
-import { colors } from "../styles/colors/theme";
+import { colors } from "../styles/colors/Theme";
 
 //component inside header component.
 const Logo = () => {

@@ -11,9 +11,16 @@ export const header = StyleSheet.create({
     alignItems: "center",
     height: 50,
   },
+
   backButton: {
     fontSize: 16,
     color: "#FFFFFF",
+  },
+  addButtonContainer: {
+    justifyContent: "flex-end",
+    width: "33%",
+    flexDirection: "row",
+    alignItems: "center",
   },
   addButton: {
     fontSize: 16,

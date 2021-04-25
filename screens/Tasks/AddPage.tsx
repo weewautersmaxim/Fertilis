@@ -11,9 +11,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
-import { background } from "../../styles/colors/theme";
-import { header } from "../../styles/components/header";
-import { initTasks, taskCRUD } from "../../utils/db";
+import { background } from "../../styles/colors/Theme";
+import { header } from "../../styles/components/general/StackHeader";
+import { initTasks, taskCRUD } from "../../utils/Db";
 
 const AddPage = ({ navigation }: any) => {
   const [sliderValue, setSliderValue] = useState(240);
@@ -200,6 +200,7 @@ const AddPage = ({ navigation }: any) => {
       >
         <Slider
           style={{ width: "90%" }}
+          //Change minimum value in case you want to test with lower value
           minimumValue={10}
           maximumValue={240}
           minimumTrackTintColor="#FFFFFF"
@@ -250,6 +251,7 @@ const AddPage = ({ navigation }: any) => {
               onPress={() => {
                 setNewTask((oldTask: Task) => {
                   oldTask.plant = "Ivy";
+                  //Change number in case you want to test with lower value
                   oldTask.plantTimer = 10 * 60;
                   return { ...oldTask };
                 });
