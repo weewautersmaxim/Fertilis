@@ -93,6 +93,12 @@ const PlantCounter = ({ navigation, route }: any) => {
             return 0;
           }
         });
+        setSecondsPlant((plantsecs) => {
+          if (plantsecs > 0) return plantsecs - 1;
+          else {
+            return 0;
+          }
+        });
       } else {
         deactivate();
         SetButtonName("Start");
@@ -102,6 +108,8 @@ const PlantCounter = ({ navigation, route }: any) => {
 
     setDetail((oldNote: Task) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
+      oldNote.plantTimer = secondsPlant;
+
       return { ...oldNote };
     });
 
@@ -110,30 +118,6 @@ const PlantCounter = ({ navigation, route }: any) => {
       saveTask();
     }
     return () => clearInterval(interval);
-  }, [timerOn]);
-
-  // timer plant
-  useEffect(() => {
-    const Plantinterval = setInterval(() => {
-      if (timerOn) {
-        setSecondsPlant((plantsecs) => {
-          if (plantsecs > 0) return plantsecs - 1;
-          else {
-            // setDetail((oldNote: Task) => {
-            //   oldNote.plantTimer = 0;
-            //   return { ...oldNote };
-            // });
-            clearInterval(Plantinterval);
-            return 0;
-          }
-        });
-      }
-    }, 1000);
-    setDetail((oldNote: Task) => {
-      oldNote.plantTimer = secondsPlant;
-      return { ...oldNote };
-    });
-    return () => clearInterval(Plantinterval);
   }, [timerOn]);
 
   //notifications
