@@ -21,6 +21,7 @@ import { plant } from "../../Components/TaskPage/GetPlant";
 import { leftSwipe } from "../../Components/TaskPage/LeftSwipe";
 import { clock } from "../../Components/TaskPage/Clockify";
 import { getStylesTasks } from "../../Components/General/CustomStyle";
+import { basicStyle } from "../../styles/components/general/BasicStyles";
 
 const TaskPage = ({ navigation }: any) => {
   //useStates
@@ -113,12 +114,7 @@ const TaskPage = ({ navigation }: any) => {
             style={{ width: 45, height: 45, marginLeft: 10, marginRight: 20 }}
           >
             <Image
-              style={{
-                resizeMode: "contain",
-                flex: 1,
-                width: "100%",
-                height: "100%",
-              }}
+              style={basicStyle.basicImage}
               source={require("../../assets/Add.png")}
             />
           </View>

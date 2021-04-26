@@ -1,14 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  TextInput,
-  Slider,
-  SafeAreaViewBase,
-  LogBox,
-} from "react-native";
+import { Text, TouchableOpacity, View, Image, LogBox } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Plant from "../../models/Plant";
@@ -19,6 +10,10 @@ import { SQLResultSetRowList } from "expo-sqlite";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { useFocusEffect } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
+import { clock } from "../../Components/TaskPage/Clockify";
+import { basicStyle } from "../../styles/components/general/BasicStyles";
+import { timeline } from "../../styles/components/TimelinePage/Timeline";
+import { plant } from "../../Components/TaskPage/GetPlant";
 
 const Timeline = ({ navigation }: any) => {
   //usestates
@@ -40,49 +35,6 @@ const Timeline = ({ navigation }: any) => {
   const getTimeline = async () => {
     const { rows }: { rows: SQLResultSetRowList } = await PlantCRUD.read.all();
     SetTimelineState((rows as any)._array.reverse());
-  };
-
-  const plant = (plant: any) => {
-    switch (plant) {
-      case "Ivy":
-        return require("../../assets/Plants/plantIcons/Plant1.png");
-      case "Basil":
-        return require("../../assets/Plants/plantIcons/Plant2.png");
-      case "Kunal":
-        return require("../../assets/Plants/plantIcons/Plant3.png");
-      default:
-        return require("../../assets/Plants/plantIcons/Plant4.png");
-    }
-  };
-
-  const clockify = (timer: any) => {
-    if (timer != 0) {
-      let time = timer * 60;
-      let hours = Math.floor(time / 60 / 60);
-      let mins = Math.floor((time / 60) % 60);
-      let seconds = Math.floor(time % 60);
-      let displayHours = hours < 10 ? `0${hours}` : hours;
-      let displayMins = mins < 10 ? `0${mins}` : mins;
-      let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-      return {
-        displayHours,
-        displayMins,
-        displaySecs,
-      };
-    }
-  };
-
-  const clock = (timer: any) => {
-    let time = "";
-    if (timer != 0) {
-      time =
-        clockify(timer)!.displayHours +
-        ":" +
-        clockify(timer)!.displayMins +
-        ":" +
-        clockify(timer)!.displaySecs;
-    }
-    return time;
   };
 
   //when starting app, no tasks exist, hide error that he can't find any tasks yet...
@@ -132,45 +84,25 @@ const Timeline = ({ navigation }: any) => {
       <ScrollView>
         {timelineState.map((n: Plant) => (
           <View key={n.id}>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <View style={basicStyle.center}>
               <View
                 style={{
                   width: "85%",
                 }}
               >
-                <Text
-                  style={{
-                    color: "white",
-                    fontSize: 20,
-                    marginTop: 20,
-                    marginBottom: 5,
-                    borderBottomColor: "white",
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  {n.datePlant}
-                </Text>
+                <Text style={timeline.date}>{n.datePlant}</Text>
               </View>
             </View>
-            <View style={{ alignItems: "center" }}>
+            <View style={basicStyle.center}>
               <View style={{ width: "85%" }}>
                 <View style={Tasks.task}>
                   <View style={{ width: 65, height: 65 }}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text
-                    style={{ fontSize: 22, color: "#707070", width: "40%" }}
-                  >
+                  <Text style={[timeline.font, { width: "40%" }]}>
                     {n.activity}
                   </Text>
-                  <Text
-                    style={{ fontSize: 22, color: "#707070", marginRight: 20 }}
-                  >
+                  <Text style={[timeline.font, { marginRight: 20 }]}>
                     {clock(n.plantTimer! / 60)}
                   </Text>
                 </View>

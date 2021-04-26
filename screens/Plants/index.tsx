@@ -5,8 +5,6 @@ import {
   View,
   Image,
   ImageBackground,
-  StyleSheet,
-  Share,
   LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,28 +17,27 @@ import Plant from "../../models/Plant";
 import { useFocusEffect } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import * as Sharing from "expo-sharing";
+import { getStylesPlants } from "../../Components/General/CustomStyle";
+import { plant } from "../../styles/components/PlantPage/Plant";
+import { basicStyle } from "../../styles/components/general/BasicStyles";
 
 const Plants = ({ navigation }: any) => {
-  const [image, setImage] = useState<Asset | null>(null);
-  const [achievement, setAchievement] = useState(
-    require("../../assets/achievements/achievement2.png")
+  const [image, SetImage] = useState<Asset | null>(null);
+  const [achievement, SetAchievement] = useState(
+    require("../../assets/achievements/achievement1.png")
   );
   useEffect(() => {
-    ImageDownload();
+    imageDownload();
   }, []);
 
   useEffect(() => {
-    ImageDownload();
+    imageDownload();
   }, [achievement]);
 
-  // useEffect(() => {
-  //   openShareDialogAsync();
-  // }, [image]);
-
-  const ImageDownload = () => {
+  const imageDownload = () => {
     const imageDownload = Asset.fromModule(achievement);
     imageDownload.downloadAsync();
-    setImage(imageDownload);
+    SetImage(imageDownload);
   };
 
   const openShareDialogAsync = async () => {
@@ -67,10 +64,10 @@ const Plants = ({ navigation }: any) => {
   const [plantCounterDahlia, SetPlantCounterDahlia] = useState(0);
 
   //opacity usestates
-  const [opacityValueIvy, setOpacityValueIvy] = useState(1);
-  const [opacityValueBasil, setOpacityValueBasil] = useState(1);
-  const [opacityValueKunal, setOpacityValueKunal] = useState(1);
-  const [opacityValueDahlia, setOpacityValueDahlia] = useState(1);
+  const [opacityValueIvy, SetOpacityValueIvy] = useState(1);
+  const [opacityValueBasil, SetOpacityValueBasil] = useState(1);
+  const [opacityValueKunal, SetOpacityValueKunal] = useState(1);
+  const [opacityValueDahlia, SetOpacityValueDahlia] = useState(1);
 
   //opacity usestate achievements
   const [achievOpacity1, SetAchievOpacity1] = useState(1);
@@ -94,7 +91,7 @@ const Plants = ({ navigation }: any) => {
   }, [plantState]);
 
   useEffect(() => {
-    OpacityHandler();
+    opacityHandler();
     achievements();
   }, [
     plantCounterIvy,
@@ -139,39 +136,7 @@ const Plants = ({ navigation }: any) => {
     }
   };
 
-  const getStyles = (
-    opacityBasil: any,
-    opacityIvy: any,
-    opacityKunal: any,
-    opacityDahlia: any,
-    opacityAchievement1: any,
-    achievOpacity2: any,
-    achievOpacity3: any
-  ) =>
-    StyleSheet.create({
-      opacityIvy: {
-        opacity: opacityIvy,
-      },
-      opacityBasil: {
-        opacity: opacityBasil,
-      },
-      opacityKunal: {
-        opacity: opacityKunal,
-      },
-      opacityDahlia: {
-        opacity: opacityDahlia,
-      },
-      opacityAchievement1: {
-        opacity: opacityAchievement1,
-      },
-      opacityAchievement2: {
-        opacity: achievOpacity2,
-      },
-      opacityAchievement3: {
-        opacity: achievOpacity3,
-      },
-    });
-  const styles = getStyles(
+  const styles = getStylesPlants(
     opacityValueBasil,
     opacityValueIvy,
     opacityValueKunal,
@@ -181,29 +146,29 @@ const Plants = ({ navigation }: any) => {
     achievOpacity3
   );
 
-  const OpacityHandler = () => {
+  const opacityHandler = () => {
     if (plantCounterIvy == 0) {
-      setOpacityValueIvy(0.4);
+      SetOpacityValueIvy(0.4);
     } else {
-      setOpacityValueIvy(1);
+      SetOpacityValueIvy(1);
     }
 
     if (plantCounterBasil == 0) {
-      setOpacityValueBasil(0.4);
+      SetOpacityValueBasil(0.4);
     } else {
-      setOpacityValueBasil(1);
+      SetOpacityValueBasil(1);
     }
 
     if (plantCounterKunal == 0) {
-      setOpacityValueKunal(0.4);
+      SetOpacityValueKunal(0.4);
     } else {
-      setOpacityValueKunal(1);
+      SetOpacityValueKunal(1);
     }
 
     if (plantCounterDahlia == 0) {
-      setOpacityValueDahlia(0.4);
+      SetOpacityValueDahlia(0.4);
     } else {
-      setOpacityValueDahlia(1);
+      SetOpacityValueDahlia(1);
     }
   };
 
@@ -268,358 +233,192 @@ const Plants = ({ navigation }: any) => {
         >
           <Logo />
         </View>
-
-        <TouchableOpacity
+        <View
           style={{
-            justifyContent: "flex-end",
             width: "33%",
-            flexDirection: "row",
-            alignItems: "center",
           }}
-          onPress={() => {
-            console.log("add");
-          }}
-        ></TouchableOpacity>
+        ></View>
       </View>
       {/* end header */}
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              marginTop: 20,
-              marginBottom: 5,
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
-            }}
-          >
-            Plants:
-          </Text>
+      <View style={basicStyle.center}>
+        <View style={plant.rowWidth}>
+          <Text style={plant.title}>Plants:</Text>
         </View>
       </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-            justifyContent: "space-between",
-            flexDirection: "row",
-          }}
-        >
+      <View style={basicStyle.center}>
+        <View style={plant.rowSection}>
           {/* first plant */}
           <View>
             <View style={styles.opacityIvy}>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>Ivy</Text>
+              <View style={basicStyle.center}>
+                <Text style={basicStyle.text}>Ivy</Text>
               </View>
-              <View style={{ width: 60, height: 60 }}>
+              <View style={plant.icons}>
                 <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
+                  style={basicStyle.basicImage}
                   source={require("../../assets/Plants/plantIcons/Plant1.png")}
                 />
               </View>
             </View>
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                position: "absolute",
-                left: 40,
-                top: 60,
-              }}
-            >
+            <View style={plant.redDot}>
               <ImageBackground
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
+                style={basicStyle.basicImage}
                 source={require("../../assets/Plants/plantIcons/RedDot.png")}
               >
                 <View
-                  style={{
-                    top: 3.5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  style={[
+                    basicStyle.center,
+                    {
+                      top: 3.5,
+                    },
+                  ]}
                 >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 18,
-                      color: "white",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {plantCounterIvy}
-                  </Text>
+                  <Text style={plant.counter}>{plantCounterIvy}</Text>
                 </View>
               </ImageBackground>
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>10:00</Text>
+            <View style={basicStyle.center}>
+              <Text style={basicStyle.text}>10:00</Text>
             </View>
           </View>
           {/* new plant */}
           <View>
             <View style={styles.opacityBasil}>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>Basil</Text>
+              <View style={basicStyle.center}>
+                <Text style={basicStyle.text}>Basil</Text>
               </View>
-              <View style={{ width: 60, height: 60 }}>
+              <View style={plant.icons}>
                 <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
+                  style={basicStyle.basicImage}
                   source={require("../../assets/Plants/plantIcons/Plant2.png")}
                 />
               </View>
             </View>
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                position: "absolute",
-                left: 40,
-                top: 60,
-              }}
-            >
+            <View style={plant.redDot}>
               <ImageBackground
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
+                style={basicStyle.basicImage}
                 source={require("../../assets/Plants/plantIcons/RedDot.png")}
               >
                 <View
-                  style={{
-                    top: 3.5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  style={[
+                    basicStyle.center,
+                    {
+                      top: 3.5,
+                    },
+                  ]}
                 >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 18,
-                      color: "white",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {plantCounterBasil}
-                  </Text>
+                  <Text style={plant.counter}>{plantCounterBasil}</Text>
                 </View>
               </ImageBackground>
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>30:00</Text>
+            <View style={basicStyle.center}>
+              <Text style={basicStyle.text}>30:00</Text>
             </View>
           </View>
           {/* New Plant */}
           <View>
             <View style={styles.opacityKunal}>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>Kunal</Text>
+              <View style={basicStyle.center}>
+                <Text style={basicStyle.text}>Kunal</Text>
               </View>
-              <View style={{ width: 60, height: 60 }}>
+              <View style={plant.icons}>
                 <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
+                  style={basicStyle.basicImage}
                   source={require("../../assets/Plants/plantIcons/Plant3.png")}
                 />
               </View>
             </View>
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                position: "absolute",
-                left: 40,
-                top: 60,
-              }}
-            >
+            <View style={plant.redDot}>
               <ImageBackground
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
+                style={basicStyle.basicImage}
                 source={require("../../assets/Plants/plantIcons/RedDot.png")}
               >
                 <View
-                  style={{
-                    top: 3.5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  style={[
+                    basicStyle.center,
+                    {
+                      top: 3.5,
+                    },
+                  ]}
                 >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 18,
-                      color: "white",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {plantCounterKunal}
-                  </Text>
+                  <Text style={plant.counter}>{plantCounterKunal}</Text>
                 </View>
               </ImageBackground>
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>60:00</Text>
+            <View style={basicStyle.center}>
+              <Text style={basicStyle.text}>60:00</Text>
             </View>
           </View>
           {/* new plant */}
           <View>
             <View style={styles.opacityDahlia}>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>Dahlia</Text>
+              <View style={basicStyle.center}>
+                <Text style={basicStyle.text}>Dahlia</Text>
               </View>
-              <View style={{ width: 60, height: 60 }}>
+              <View style={plant.icons}>
                 <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
+                  style={basicStyle.basicImage}
                   source={require("../../assets/Plants/plantIcons/Plant4.png")}
                 />
               </View>
             </View>
-            <View
-              style={{
-                width: 32,
-                height: 32,
-                position: "absolute",
-                left: 40,
-                top: 60,
-              }}
-            >
+            <View style={plant.redDot}>
               <ImageBackground
-                style={{
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
+                style={basicStyle.basicImage}
                 source={require("../../assets/Plants/plantIcons/RedDot.png")}
               >
                 <View
-                  style={{
-                    top: 3.5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  style={[
+                    basicStyle.center,
+                    {
+                      top: 3.5,
+                    },
+                  ]}
                 >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: 18,
-                      color: "white",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {plantCounterDahlia}
-                  </Text>
+                  <Text style={plant.counter}>{plantCounterDahlia}</Text>
                 </View>
               </ImageBackground>
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ color: "white", fontSize: 20 }}>90:00</Text>
+            <View style={basicStyle.center}>
+              <Text style={basicStyle.text}>90:00</Text>
             </View>
           </View>
         </View>
       </View>
       {/* end section plants */}
       {/* start section achievments */}
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              marginTop: 20,
-              marginBottom: 5,
-              borderBottomColor: "white",
-              borderBottomWidth: 1,
-            }}
-          >
-            Achievements:
-          </Text>
+      <View style={basicStyle.center}>
+        <View style={plant.rowWidth}>
+          <Text style={plant.title}>Achievements:</Text>
         </View>
       </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-            justifyContent: "space-between",
-            flexDirection: "row",
-          }}
-        >
+      <View style={basicStyle.center}>
+        <View style={plant.rowSection}>
           {/* achievement 1 */}
           <TouchableOpacity
             style={{ width: 100 }}
             onPress={() => {
-              setAchievement(
+              SetAchievement(
                 require("../../assets/achievements/achievement1.png")
               );
               openShareDialogAsync();
             }}
           >
             <View style={styles.opacityAchievement1}>
-              <View
-                style={{
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ color: "white", fontSize: 14 }}>
-                    Getting started
-                  </Text>
+              <View style={basicStyle.center}>
+                <View style={basicStyle.center}>
+                  <Text style={plant.achievement}>Getting started</Text>
                 </View>
-                <View style={{ width: 60, height: 60 }}>
+                <View style={plant.icons}>
                   <Image
-                    style={{
-                      resizeMode: "contain",
-                      flex: 1,
-                      width: "100%",
-                      height: "100%",
-                    }}
+                    style={basicStyle.basicImage}
                     source={require("../../assets/achievements/achievement1.png")}
                   />
                 </View>
               </View>
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text
-                style={{ color: "white", fontSize: 12, textAlign: "center" }}
-              >
+            <View style={basicStyle.center}>
+              <Text style={[plant.description, { textAlign: "center" }]}>
                 "Get a total of 5 plants"
               </Text>
             </View>
@@ -628,37 +427,26 @@ const Plants = ({ navigation }: any) => {
           <TouchableOpacity
             style={{ width: 100 }}
             onPress={() => {
-              setAchievement(
+              SetAchievement(
                 require("../../assets/achievements/achievement2.png")
               );
               openShareDialogAsync();
             }}
           >
             <View style={styles.opacityAchievement2}>
-              <View
-                style={{
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ color: "white", fontSize: 14 }}>
-                    Catch em all
-                  </Text>
+              <View style={basicStyle.center}>
+                <View style={basicStyle.center}>
+                  <Text style={plant.achievement}>Catch em all</Text>
                 </View>
-                <View style={{ width: 60, height: 60 }}>
+                <View style={plant.icons}>
                   <Image
-                    style={{
-                      resizeMode: "contain",
-                      flex: 1,
-                      width: "100%",
-                      height: "100%",
-                    }}
+                    style={basicStyle.basicImage}
                     source={require("../../assets/achievements/achievement2.png")}
                   />
                 </View>
               </View>
             </View>
-            <View style={{ alignItems: "center" }}>
+            <View style={basicStyle.center}>
               <Text
                 style={{ color: "white", fontSize: 12, textAlign: "center" }}
               >
@@ -669,33 +457,22 @@ const Plants = ({ navigation }: any) => {
           {/* achievement 3 */}
           <TouchableOpacity style={{ width: 100 }}>
             <View style={styles.opacityAchievement3}>
-              <View
-                style={{
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ alignItems: "center" }}>
+              <View style={basicStyle.center}>
+                <View style={basicStyle.center}>
                   <Text style={{ color: "white", fontSize: 14 }}>
                     Collector
                   </Text>
                 </View>
-                <View style={{ width: 60, height: 60 }}>
+                <View style={plant.icons}>
                   <Image
-                    style={{
-                      resizeMode: "contain",
-                      flex: 1,
-                      width: "100%",
-                      height: "100%",
-                    }}
+                    style={basicStyle.basicImage}
                     source={require("../../assets/achievements/achievement3.png")}
                   />
                 </View>
               </View>
             </View>
-            <View style={{ alignItems: "center" }}>
-              <Text
-                style={{ color: "white", fontSize: 12, textAlign: "center" }}
-              >
+            <View style={basicStyle.center}>
+              <Text style={[plant.description, { textAlign: "center" }]}>
                 "Get a total of 25 plants"
               </Text>
             </View>
