@@ -8,8 +8,7 @@ import {
 } from "expo-sqlite";
 import Plant from "../models/Plant";
 
-//2de database voor afgemaakte opdrachten in op te slaan, de vorige data wordt verwijderd om zo minder data voor
-//lange periode op te slaan
+//second database for saving data for longer periods of time. (only necessary data)
 
 const databaseName: string = "plantDb";
 

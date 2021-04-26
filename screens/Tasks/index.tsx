@@ -5,7 +5,7 @@ import PlantCounter from "./PlantCounter";
 import AddPage from "./AddPage";
 
 const stack = createStackNavigator();
-const Tasks = ({ navigation }: any) => {
+const Tasks = () => {
   return (
     <stack.Navigator headerMode="none" initialRouteName="TaskPage">
       <stack.Screen name="TaskPage" component={TaskPage} />

@@ -1,20 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  Button,
-  Platform,
-} from "react-native";
+import { Text, TouchableOpacity, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
-import { background } from "../../styles/colors/theme";
-import { header } from "../../styles/components/header";
+import { header } from "../../styles/components/general/StackHeader";
 import Logo from "../../Components/Logo";
-import { Timer } from "../../styles/components/Timer";
+import { Timer } from "../../styles/components/PlantCounterPage/Timer";
 import Task from "../../models/Task";
-import { taskCRUD } from "../../utils/db";
+import { taskCRUD } from "../../utils/Db";
 import Plant from "../../models/Plant";
 import { PlantCRUD } from "../../utils/PlantDb";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,11 +14,13 @@ import * as Notifications from "expo-notifications";
 import {
   clockify,
   clockifyPlant,
-} from "../../Components/PlantCounter/clockify";
+} from "../../Components/PlantCounterPage/clockify";
 import {
   activate,
   deactivate,
-} from "../../Components/PlantCounter/keep-awake_Expo";
+} from "../../Components/PlantCounterPage/keep-awake_Expo";
+import { background } from "../../styles/colors/Theme";
+import { basicStyle } from "../../styles/components/general/BasicStyles";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -39,7 +33,7 @@ Notifications.setNotificationHandler({
 const PlantCounter = ({ navigation, route }: any) => {
   //usestates
   const [secondsLeft, setSecondsLeft] = useState(5);
-  const [SecondsPlant, setSecondsPlant] = useState(5);
+  const [secondsPlant, setSecondsPlant] = useState(5);
   const [timerOn, setTimerOn] = useState(false);
   const [buttonName, SetButtonName] = useState("Start");
   const [Img, SetImg] = useState(
@@ -62,55 +56,17 @@ const PlantCounter = ({ navigation, route }: any) => {
 
   useEffect(() => {
     getDetail();
-  }, []);
-
-  useEffect(() => {
     adjustingTimer();
   }, []);
 
   useEffect(() => {
     adjustingTimer();
+    setDate();
   }, [detail]);
 
   useEffect(() => {
-    GetRightImage();
+    getRightImage();
   });
-
-  useEffect(() => {
-    let today = new Date().toLocaleDateString();
-
-    SetDetailPlant((oldNote: Plant) => {
-      oldNote.plant = detail.plant;
-      oldNote.activity = detail.activity;
-      oldNote.datePlant = today;
-      return { ...oldNote };
-    });
-
-    SetDetailPlant((oldNote: Plant) => {
-      if (oldNote.plant == "Ivy") {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 600;
-          return { ...oldNote };
-        });
-      } else if (detail.plant == "Basil") {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 1800;
-          return { ...oldNote };
-        });
-      } else if (detail.plant == "Kunal") {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 3600;
-          return { ...oldNote };
-        });
-      } else {
-        SetDetailPlant((oldNote: Plant) => {
-          oldNote.plantTimer = 5400;
-          return { ...oldNote };
-        });
-      }
-      return { ...oldNote };
-    });
-  }, [detail]);
 
   //useffects
   // Runs when timerOn value changes to start or stop timer
@@ -123,22 +79,17 @@ const PlantCounter = ({ navigation, route }: any) => {
         setSecondsLeft((secs) => {
           if (secs > 0) return secs - 1;
           else {
-            //why timerfix? for timer to work. to program needs to devide. result is a float number.
-            // it needs to count '0' twice since first time is not 0 nor 1, but a float 0 (0.1). this 'timerfix' makes sure that only 1 message is send
+            clearInterval(interval);
             if (timerFix == false) {
               timerFix = true;
             } else {
               schedulePushNotification();
             }
-            console.log("tzs");
-            //if timer hits 0, force update 0
-            clearInterval(interval);
             setDetail((oldNote: Task) => {
               oldNote.timer = 0;
               oldNote.plantTimer = 0;
               return { ...oldNote };
             });
-
             return 0;
           }
         });
@@ -153,41 +104,36 @@ const PlantCounter = ({ navigation, route }: any) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
       return { ...oldNote };
     });
-    console.log("detail timer ", detail.timer);
 
     if (detail.timer == 0) {
-      console.log("test");
       savePlant();
       saveTask();
     }
-
     return () => clearInterval(interval);
   }, [timerOn]);
 
   // timer plant
   useEffect(() => {
-    const interval = setInterval(() => {
+    const Plantinterval = setInterval(() => {
       if (timerOn) {
-        setSecondsPlant((secs) => {
-          if (secs > 0) return secs - 1;
+        setSecondsPlant((plantsecs) => {
+          if (plantsecs > 0) return plantsecs - 1;
           else {
-            //if timer hits 0, force update 0
             // setDetail((oldNote: Task) => {
             //   oldNote.plantTimer = 0;
-            //   oldNote.timer = detail.timer;
             //   return { ...oldNote };
             // });
-            clearInterval(interval);
+            clearInterval(Plantinterval);
             return 0;
           }
         });
       }
     }, 1000);
     setDetail((oldNote: Task) => {
-      oldNote.plantTimer = SecondsPlant;
+      oldNote.plantTimer = secondsPlant;
       return { ...oldNote };
     });
-    return () => clearInterval(interval);
+    return () => clearInterval(Plantinterval);
   }, [timerOn]);
 
   //notifications
@@ -200,6 +146,17 @@ const PlantCounter = ({ navigation, route }: any) => {
       trigger: { seconds: 1 },
     });
   }
+
+  const setDate = () => {
+    let today = new Date().toLocaleDateString();
+
+    SetDetailPlant((oldNote: Plant) => {
+      oldNote.plant = detail.plant;
+      oldNote.activity = detail.activity;
+      oldNote.datePlant = today;
+      return { ...oldNote };
+    });
+  };
 
   const getDetail = async () => {
     const res = await taskCRUD.read.detail(+route.params.id);
@@ -224,54 +181,51 @@ const PlantCounter = ({ navigation, route }: any) => {
     }
   };
 
-  const GetRightImage = () => {
-    //if ivy
-    if (detail.plant == "Ivy") {
-      if (SecondsPlant > 300) {
-        SetImg(require("../../assets/Plants/plant1_A.png"));
-      } else if (SecondsPlant >= 100) {
-        SetImg(require("../../assets/Plants/plant1_B.png"));
-      } else if (SecondsPlant > 0) {
-        SetImg(require("../../assets/Plants/plant1_C.png"));
-      } else {
-        SetImg(require("../../assets/Plants/plant1_D.png"));
-      }
-    }
-    //if basil
-    else if (detail.plant == "Basil") {
-      if (SecondsPlant > 900) {
-        SetImg(require("../../assets/Plants/plant2_A.png"));
-      } else if (SecondsPlant >= 150) {
-        SetImg(require("../../assets/Plants/plant2_B.png"));
-      } else if (SecondsPlant > 0) {
-        SetImg(require("../../assets/Plants/plant2_C.png"));
-      } else {
-        SetImg(require("../../assets/Plants/plant2_D.png"));
-      }
-    }
-    //if kunal
-    else if (detail.plant == "Kunal") {
-      if (SecondsPlant > 1800) {
-        SetImg(require("../../assets/Plants/plant3_A.png"));
-      } else if (SecondsPlant >= 200) {
-        SetImg(require("../../assets/Plants/plant3_B.png"));
-      } else if (SecondsPlant > 0) {
-        SetImg(require("../../assets/Plants/plant3_C.png"));
-      } else {
-        SetImg(require("../../assets/Plants/plant3_D.png"));
-      }
-    }
-    //if Dahlia
-    else {
-      if (SecondsPlant > 2700) {
-        SetImg(require("../../assets/Plants/plant4_A.png"));
-      } else if (SecondsPlant >= 300) {
-        SetImg(require("../../assets/Plants/plant4_B.png"));
-      } else if (SecondsPlant > 0) {
-        SetImg(require("../../assets/Plants/plant4_C.png"));
-      } else {
-        SetImg(require("../../assets/Plants/plant4_D.png"));
-      }
+  const getRightImage = () => {
+    switch (detail.plant) {
+      case "Ivy":
+        if (secondsPlant > 300) {
+          SetImg(require("../../assets/Plants/plant1_A.png"));
+        } else if (secondsPlant >= 100) {
+          SetImg(require("../../assets/Plants/plant1_B.png"));
+        } else if (secondsPlant > 0) {
+          SetImg(require("../../assets/Plants/plant1_C.png"));
+        } else {
+          SetImg(require("../../assets/Plants/plant1_D.png"));
+        }
+        break;
+      case "Basil":
+        if (secondsPlant > 900) {
+          SetImg(require("../../assets/Plants/plant2_A.png"));
+        } else if (secondsPlant >= 150) {
+          SetImg(require("../../assets/Plants/plant2_B.png"));
+        } else if (secondsPlant > 0) {
+          SetImg(require("../../assets/Plants/plant2_C.png"));
+        } else {
+          SetImg(require("../../assets/Plants/plant2_D.png"));
+        }
+        break;
+      case "Kunal":
+        if (secondsPlant > 1800) {
+          SetImg(require("../../assets/Plants/plant3_A.png"));
+        } else if (secondsPlant >= 200) {
+          SetImg(require("../../assets/Plants/plant3_B.png"));
+        } else if (secondsPlant > 0) {
+          SetImg(require("../../assets/Plants/plant3_C.png"));
+        } else {
+          SetImg(require("../../assets/Plants/plant3_D.png"));
+        }
+        break;
+      default:
+        if (secondsPlant > 2700) {
+          SetImg(require("../../assets/Plants/plant4_A.png"));
+        } else if (secondsPlant >= 300) {
+          SetImg(require("../../assets/Plants/plant4_B.png"));
+        } else if (secondsPlant > 0) {
+          SetImg(require("../../assets/Plants/plant4_C.png"));
+        } else {
+          SetImg(require("../../assets/Plants/plant4_D.png"));
+        }
     }
   };
 
@@ -282,6 +236,7 @@ const PlantCounter = ({ navigation, route }: any) => {
     }
     if (detail.plantTimer) {
       let planttime = detail.plantTimer;
+      // let planttime = 2;
       setSecondsPlant(planttime);
     }
   };
@@ -316,39 +271,37 @@ const PlantCounter = ({ navigation, route }: any) => {
           <Logo />
         </View>
 
-        <TouchableOpacity
+        <View
           style={{
-            justifyContent: "flex-end",
             width: "33%",
-            flexDirection: "row",
-            alignItems: "center",
           }}
-        ></TouchableOpacity>
+        ></View>
       </View>
+      {/* end header */}
       <ScrollView>
         <View style={{ alignItems: "center" }}>
           <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 20,
-              width: "80%",
-            }}
+            style={[
+              basicStyle.center,
+              {
+                marginTop: 20,
+                width: "80%",
+              },
+            ]}
           >
             <Text style={Timer.titel}>{detail?.activity}</Text>
             <Text>
-              {clockifyPlant(SecondsPlant).displayHours}:
-              {clockifyPlant(SecondsPlant).displayMins}:{""}
-              {clockifyPlant(SecondsPlant).displaySecs}
+              {clockifyPlant(secondsPlant).displayHours}:
+              {clockifyPlant(secondsPlant).displayMins}:{""}
+              {clockifyPlant(secondsPlant).displaySecs}
             </Text>
           </View>
         </View>
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View style={basicStyle.center}>
           <View
             style={{
               alignItems: "center",
-              backgroundColor: "red",
-              width: "85%",
+              width: "82%",
             }}
           >
             {/* lottie file */}
@@ -359,30 +312,23 @@ const PlantCounter = ({ navigation, route }: any) => {
             ></LottieView>
             <View
               style={{
-                width: 200,
-                height: 200,
-                marginTop: 68,
+                width: 180,
+                height: 180,
+                marginTop: 70,
               }}
             >
-              <Image
-                style={{
-                  resizeMode: "contain",
-                  flex: 1,
-                  width: "100%",
-                  height: "100%",
-                }}
-                source={Img}
-              ></Image>
+              <Image style={basicStyle.basicImage} source={Img}></Image>
             </View>
           </View>
         </View>
         {/* timer */}
         <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 80,
-          }}
+          style={[
+            basicStyle.center,
+            {
+              marginTop: 80,
+            },
+          ]}
         >
           <Text style={{ color: "white", fontSize: 28 }}>
             {clockify(secondsLeft).displayHours}:
@@ -399,20 +345,22 @@ const PlantCounter = ({ navigation, route }: any) => {
             });
             // await schedulePushNotification();
           }}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 20,
-          }}
+          style={[
+            basicStyle.center,
+            {
+              marginTop: 20,
+            },
+          ]}
         >
           <View
-            style={{
-              backgroundColor: "#68D2AE",
-              width: 120,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 5,
-            }}
+            style={[
+              basicStyle.center,
+              {
+                backgroundColor: "#95D9C2",
+                width: 120,
+                borderRadius: 5,
+              },
+            ]}
           >
             <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
               {buttonName}

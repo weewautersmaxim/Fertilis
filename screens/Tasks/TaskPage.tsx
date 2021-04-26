@@ -5,39 +5,37 @@ import {
   View,
   Image,
   ScrollView,
-  StyleSheet,
   LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
-import { background } from "../../styles/colors/theme";
+import { background } from "../../styles/colors/Theme";
 import { SQLResultSetRowList } from "expo-sqlite";
-import { header } from "../../styles/components/header";
-import { Tasks } from "../../styles/components/Tasks";
-import { taskCRUD } from "../../utils/db";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { header } from "../../styles/components/general/StackHeader";
+import { Tasks } from "../../styles/components/TaskPage/Tasks";
+import { taskCRUD } from "../../utils/Db";
+import { useFocusEffect } from "@react-navigation/native";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+import { plant } from "../../Components/TaskPage/GetPlant";
+import { leftSwipe } from "../../Components/TaskPage/LeftSwipe";
+import { clock } from "../../Components/TaskPage/Clockify";
+import { getStylesTasks } from "../../Components/General/CustomStyle";
+import { basicStyle } from "../../styles/components/general/BasicStyles";
 
 const TaskPage = ({ navigation }: any) => {
-  //usestates
-  const [TaskState, SetTaskState] = useState<Task[]>([]);
-  const [unfinishedTasks, SetunfinishedTasks] = useState<Task[]>([]);
+  //useStates
+  const [taskState, SetTaskState] = useState<Task[]>([]);
+  const [unfinishedTasks, SetUnfinishedTasks] = useState<Task[]>([]);
   const [newTasks, SetNewTasks] = useState<Task[]>([]);
 
-  //
-  const [customOpacity, SetCustomOpacity] = useState(1);
-  const [customHeight, SetCustomHeight] = useState(27);
-  const [customBorder, SetCustomBorder] = useState(2);
-  const [customMargin, SetCustomMargin] = useState(10);
+  //useState for changing style when criteria is met
+  const [customDisplay, SetCustomDisplay] = useState("none");
 
-  const [taskImage, SetTaskImage] = useState(
-    require("../../assets/Plants/plantIcons/Plant2.png")
-  );
-
+  //useEffects
   useEffect(() => {
-    TimerDone();
-  }, [TaskState]);
+    timerDone();
+  }, [taskState]);
 
   useFocusEffect(
     useCallback(() => {
@@ -56,125 +54,33 @@ const TaskPage = ({ navigation }: any) => {
 
     await SetTaskState((rows as any)._array);
 
-    SetunfinishedTasks(unifinishedTask);
+    SetUnfinishedTasks(unifinishedTask);
     if (unifinishedTask.length == 0) {
-      SetCustomOpacity(0);
-      SetCustomHeight(0);
-      SetCustomBorder(0);
-      SetCustomMargin(0);
+      SetCustomDisplay("none");
     } else {
-      SetCustomOpacity(1);
-      SetCustomHeight(27);
-      SetCustomBorder(2);
-      SetCustomMargin(10);
+      SetCustomDisplay("flex");
     }
     SetNewTasks(newTasks);
   };
 
-  //method for removing "unfinished tab" when empty
-  const getStyles = (
-    opacityValue: any,
-    customHeight: any,
-    customBorder: any,
-    customMargin: any
-  ) =>
-    StyleSheet.create({
-      customSection: {
-        opacity: opacityValue,
-        height: customHeight,
-        width: "100%",
-        borderBottomColor: "white",
-        borderBottomWidth: customBorder,
-        marginTop: customMargin,
-      },
-    });
-  const styles = getStyles(
-    customOpacity,
-    customHeight,
-    customBorder,
-    customMargin
-  );
+  const styles = getStylesTasks(customDisplay);
 
   const removeTasks = async (id: number) => {
     await taskCRUD.delete(id);
     getTasks();
   };
 
-  const plant = (plant: any) => {
-    switch (plant) {
-      case "Ivy":
-        return require("../../assets/Plants/plantIcons/Plant1.png");
-      case "Basil":
-        return require("../../assets/Plants/plantIcons/Plant2.png");
-      case "Kunal":
-        return require("../../assets/Plants/plantIcons/Plant3.png");
-      default:
-        return require("../../assets/Plants/plantIcons/Plant4.png");
-    }
-  };
-
-  const TimerDone = () => {
-    for (let i = 0; i < TaskState.length; i++) {
-      if (TaskState[i].timer == 0) {
-        removeTasks(parseInt(TaskState[i].id!));
+  const timerDone = () => {
+    for (let i = 0; i < taskState.length; i++) {
+      if (taskState[i].timer == 0) {
+        removeTasks(parseInt(taskState[i].id!));
       }
     }
   };
 
-  const leftSwipe = () => {
-    return (
-      <View
-        style={{
-          backgroundColor: "#1A9375",
-          marginTop: 10,
-          flexDirection: "row",
-          width: "100%",
-          borderRadius: 10,
-          padding: 6,
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ color: "white", fontSize: 15, marginLeft: 10 }}>
-          Delete
-        </Text>
-      </View>
-    );
-  };
-
-  const clockify = (timer: any) => {
-    if (timer != 0) {
-      let time = timer * 60;
-      let hours = Math.floor(time / 60 / 60);
-      let mins = Math.floor((time / 60) % 60);
-      let seconds = Math.floor(time % 60);
-      let displayHours = hours < 10 ? `0${hours}` : hours;
-      let displayMins = mins < 10 ? `0${mins}` : mins;
-      let displaySecs = seconds < 10 ? `0${seconds}` : seconds;
-      return {
-        displayHours,
-        displayMins,
-        displaySecs,
-      };
-    }
-  };
-
-  const clock = (timer: any) => {
-    let time = "";
-    if (timer != 0) {
-      time =
-        clockify(timer)!.displayHours +
-        ":" +
-        clockify(timer)!.displayMins +
-        ":" +
-        clockify(timer)!.displaySecs;
-    }
-    return time;
-  };
-
-  //when starting app, no tasks exist, hide error that he can't find any tasks yet...
+  //When starting app for the first time, no tasks have been created yet. Hide warning that he can't find any tasks...
   LogBox.ignoreAllLogs();
-  
+
   return (
     <SafeAreaView style={{ ...background.neutral.green, flex: 1 }}>
       {/* header */}
@@ -198,12 +104,7 @@ const TaskPage = ({ navigation }: any) => {
         </View>
 
         <TouchableOpacity
-          style={{
-            justifyContent: "flex-end",
-            width: "33%",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
+          style={header.addButtonContainer}
           onPress={() => {
             navigation.navigate("AddPage");
           }}
@@ -213,12 +114,7 @@ const TaskPage = ({ navigation }: any) => {
             style={{ width: 45, height: 45, marginLeft: 10, marginRight: 20 }}
           >
             <Image
-              style={{
-                resizeMode: "contain",
-                flex: 1,
-                width: "100%",
-                height: "100%",
-              }}
+              style={basicStyle.basicImage}
               source={require("../../assets/Add.png")}
             />
           </View>
@@ -229,11 +125,10 @@ const TaskPage = ({ navigation }: any) => {
       <ScrollView>
         <View style={Tasks.base}>
           <View style={styles.customSection}>
-            <Text style={{ color: "white", fontSize: 18 }}>Unfinished:</Text>
+            <Text style={Tasks.textTitle}>Unfinished:</Text>
           </View>
-          {/* end unfinished section */}
           <ScrollView>
-            {/* here start tasks */}
+            {/* here start unfinished tasks */}
             {unfinishedTasks.map((n: Task) => (
               <Swipeable
                 key={n.id}
@@ -249,33 +144,29 @@ const TaskPage = ({ navigation }: any) => {
                   style={Tasks.task}
                   key={n.id}
                 >
-                  <View style={{ width: 65, height: 65 }}>
+                  <View style={Tasks.taskImageContainer}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text
-                    style={{ fontSize: 23, color: "#707070", width: "40%" }}
-                  >
+                  <Text style={[Tasks.text, { width: "40%" }]}>
                     {n.activity}
                   </Text>
-                  <Text
-                    style={{ fontSize: 23, color: "#707070", marginRight: 20 }}
-                  >
+                  <Text style={[Tasks.text, { marginRight: 20 }]}>
                     {clock(n.timer)}
                   </Text>
                 </TouchableOpacity>
               </Swipeable>
             ))}
-            {/* end tasks */}
+            {/* end unfinished tasks */}
           </ScrollView>
-          {/* end tasks */}
+          {/* end unfinished section */}
         </View>
-        {/* tasks section */}
+        {/* new tasks section */}
         <View style={Tasks.base}>
           <View style={Tasks.taskSection}>
-            <Text style={{ color: "white", fontSize: 18 }}>New:</Text>
+            <Text style={Tasks.textTitle}>New:</Text>
           </View>
           <ScrollView>
-            {/* here start tasks */}
+            {/* here start new tasks */}
             {newTasks.map((n: Task) => (
               <Swipeable
                 key={n.id}
@@ -291,28 +182,21 @@ const TaskPage = ({ navigation }: any) => {
                   style={Tasks.task}
                   key={n.id}
                 >
-                  <View style={{ width: 65, height: 65 }}>
+                  <View style={Tasks.taskImageContainer}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text
-                    style={{
-                      fontSize: 23,
-                      color: "#707070",
-                      width: "40%",
-                    }}
-                  >
+                  <Text style={[Tasks.text, { width: "40%" }]}>
                     {n.activity}
                   </Text>
-                  <Text
-                    style={{ fontSize: 23, color: "#707070", marginRight: 20 }}
-                  >
+                  <Text style={[Tasks.text, { marginRight: 20 }]}>
                     {clock(n.timer)}
                   </Text>
                 </TouchableOpacity>
               </Swipeable>
             ))}
-            {/* end tasks */}
+            {/* end new tasks */}
           </ScrollView>
+          {/* end tasks section */}
         </View>
       </ScrollView>
     </SafeAreaView>

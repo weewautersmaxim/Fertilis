@@ -6,35 +6,38 @@ import {
   Image,
   TextInput,
   Slider,
-  StyleSheet,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getStylesAdd } from "../../Components/General/CustomStyle";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
-import { background } from "../../styles/colors/theme";
-import { header } from "../../styles/components/header";
-import { initTasks, taskCRUD } from "../../utils/db";
+import { background } from "../../styles/colors/Theme";
+import { Add } from "../../styles/components/AddPage/Add";
+import { header } from "../../styles/components/general/StackHeader";
+import { initTasks, taskCRUD } from "../../utils/Db";
 
 const AddPage = ({ navigation }: any) => {
+  //useStates
   const [sliderValue, setSliderValue] = useState(240);
   const [newTask, setNewTask] = useState<Task>({
-    activity: "test",
+    activity: "",
     timer: 240,
     plant: "Ivy",
-    plantTimer: 240,
+    plantTimer: 600,
     unfinished: "false",
   });
-  //special usestates for every plant
-  //for changing opacity for each individual plant
-  const [opacityValue, setOpacityValue] = useState(1);
-  const [OpacityValuePlant3, setOpacityValuePlant3] = useState(1);
-  const [OpacityValuePlant4, setOpacityValuePlant4] = useState(1);
+  //special usestates for every plant for changing opacity for each individual plant (first plant never unavailable)
+  const [opacityValue2, SetOpacityValue2] = useState(1);
+  const [OpacityValuePlant3, SetOpacityValuePlant3] = useState(1);
+  const [OpacityValuePlant4, SetOpacityValuePlant4] = useState(1);
 
   //disable chosen plant
-  const [disabled, setDisabled] = useState(false);
-  const [disabledPlant3, setDisabledPlant3] = useState(false);
-  const [disabledPlant4, setDisabledPlant4] = useState(false);
+  const [disabled, SetDisabled] = useState(false);
+  const [disabledPlant3, SetDisabledPlant3] = useState(false);
+  const [disabledPlant4, SetDisabledPlant4] = useState(false);
 
+  //useEffects
   useEffect(() => {
     initTasks();
   }, []);
@@ -54,41 +57,34 @@ const AddPage = ({ navigation }: any) => {
     }
   };
 
-  const getStyles = (opacityValue: any, OpacityValuePlant3: any) =>
-    StyleSheet.create({
-      opacity: {
-        opacity: opacityValue,
-      },
-      opacityPlant3: {
-        opacity: OpacityValuePlant3,
-      },
-      opacityPlant4: {
-        opacity: OpacityValuePlant4,
-      },
-    });
-  const styles = getStyles(opacityValue, OpacityValuePlant3);
+  const styles = getStylesAdd(
+    opacityValue2,
+    OpacityValuePlant3,
+    OpacityValuePlant4
+  );
 
   const OpacityHandler = () => {
+    //could use switch case but 'if else' is apperantly better for performance
     if (sliderValue <= 20) {
-      setOpacityValue(0.4);
-      setDisabled(!disabled);
+      SetOpacityValue2(0.4);
+      SetDisabled(!disabled);
     } else {
-      setOpacityValue(1);
-      setDisabled(disabled);
+      SetOpacityValue2(1);
+      SetDisabled(disabled);
     }
     if (sliderValue <= 50) {
-      setOpacityValuePlant3(0.4);
-      setDisabledPlant3(!disabled);
+      SetOpacityValuePlant3(0.4);
+      SetDisabledPlant3(!disabled);
     } else {
-      setOpacityValuePlant3(1);
-      setDisabledPlant3(disabled);
+      SetOpacityValuePlant3(1);
+      SetDisabledPlant3(disabled);
     }
     if (sliderValue <= 80) {
-      setOpacityValuePlant4(0.4);
-      setDisabledPlant4(!disabled);
+      SetOpacityValuePlant4(0.4);
+      SetDisabledPlant4(!disabled);
     } else {
-      setOpacityValuePlant4(1);
-      setDisabledPlant4(disabled);
+      SetOpacityValuePlant4(1);
+      SetDisabledPlant4(disabled);
     }
   };
   return (
@@ -118,278 +114,220 @@ const AddPage = ({ navigation }: any) => {
         >
           <Logo />
         </View>
-
-        <TouchableOpacity
-          style={{
-            justifyContent: "flex-end",
-            width: "33%",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-          onPress={() => {
-            console.log("add");
-          }}
-        ></TouchableOpacity>
+        {/* add button possible, not necessary on this page */}
+        <View style={{ width: "33%" }}></View>
       </View>
       {/* end header */}
+      <View style={Add.section}>
+        <ScrollView style={{ width: "100%" }}>
+          <View style={Add.section}>
+            <Text style={Add.title}>Activity:</Text>
+          </View>
+          <View style={Add.section}>
+            <TextInput
+              maxLength={150}
+              placeholder="write your task!"
+              style={Add.input}
+              multiline={true}
+              returnKeyType="done"
+              onChangeText={(text: string) => {
+                setNewTask((oldTask: Task) => {
+                  oldTask.activity = text;
+                  return { ...oldTask };
+                });
+              }}
+              value={newTask?.activity}
+            ></TextInput>
+          </View>
 
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-          }}
-        >
-          <Text
+          <View style={Add.section}>
+            <View style={Add.autoWidth}>
+              <Text style={Add.title}>Timer:</Text>
+            </View>
+          </View>
+          <View style={Add.section}>
+            <Slider
+              style={{ width: "90%" }}
+              //Change minimum value in case you want to test with lower value
+              minimumValue={0.2}
+              maximumValue={240}
+              minimumTrackTintColor="#FFFFFF"
+              maximumTrackTintColor="#1A9375"
+              step={10}
+              onValueChange={(text: number) => {
+                setNewTask((oldTask: Task) => {
+                  oldTask.timer = text;
+                  setSliderValue(text);
+                  return { ...oldTask };
+                });
+                OpacityHandler();
+              }}
+              value={newTask?.timer}
+            />
+            <Text style={{ color: "white", fontSize: 25 }}>
+              {sliderValue} minutes
+            </Text>
+          </View>
+          <View style={Add.section}>
+            <View
+              style={[
+                Add.autoWidth,
+                {
+                  paddingBottom: 10,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  Add.title,
+                  {
+                    borderBottomColor: "white",
+                    borderBottomWidth: 1,
+                  },
+                ]}
+              >
+                Plant:
+              </Text>
+            </View>
+          </View>
+          <View style={Add.section}>
+            <View
+              style={[
+                Add.autoWidth,
+                {
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                },
+              ]}
+            >
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    setNewTask((oldTask: Task) => {
+                      oldTask.plant = "Ivy";
+                      //Change number in case you want to test with lower value
+                      oldTask.plantTimer = 10 * 1;
+                      return { ...oldTask };
+                    });
+                  }}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ color: "white" }}>Ivy</Text>
+                  </View>
+                  <View style={Add.imageContainer}>
+                    <Image
+                      style={Add.image}
+                      source={require("../../assets/Plants/plantIcons/Plant1.png")}
+                    />
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={Add.timer}>10:00</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.opacity}>
+                <TouchableOpacity
+                  disabled={disabled}
+                  onPress={() => {
+                    setNewTask((oldTask: Task) => {
+                      oldTask.plant = "Basil";
+                      oldTask.plantTimer = 30 * 60;
+                      return { ...oldTask };
+                    });
+                  }}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ color: "white" }}>Basil</Text>
+                  </View>
+                  <View style={Add.imageContainer}>
+                    <Image
+                      style={Add.image}
+                      source={require("../../assets/Plants/plantIcons/Plant2.png")}
+                    />
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={Add.timer}>30:00</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.opacityPlant3}>
+                <TouchableOpacity
+                  disabled={disabledPlant3}
+                  onPress={() => {
+                    setNewTask((oldTask: Task) => {
+                      oldTask.plant = "Kunal";
+                      oldTask.plantTimer = 60 * 60;
+                      return { ...oldTask };
+                    });
+                  }}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ color: "white" }}>Kunal</Text>
+                  </View>
+                  <View style={Add.imageContainer}>
+                    <Image
+                      style={Add.image}
+                      source={require("../../assets/Plants/plantIcons/Plant3.png")}
+                    />
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={Add.timer}>60:00</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.opacityPlant4}>
+                <TouchableOpacity
+                  disabled={disabledPlant4}
+                  onPress={() => {
+                    setNewTask((oldTask: Task) => {
+                      oldTask.plant = "Dahlia";
+                      oldTask.plantTimer = 90 * 60;
+                      return { ...oldTask };
+                    });
+                  }}
+                >
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ color: "white" }}>Dahlia</Text>
+                  </View>
+                  <View style={Add.imageContainer}>
+                    <Image
+                      style={Add.image}
+                      source={require("../../assets/Plants/plantIcons/Plant4.png")}
+                    />
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={Add.timer}>90:00</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              saveTask();
+            }}
             style={{
-              color: "white",
-              fontSize: 20,
-              marginTop: 20,
-              marginBottom: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 30,
             }}
           >
-            Activity:
-          </Text>
-        </View>
-      </View>
-      <View style={{ alignItems: "center" }}>
-        <TextInput
-          maxLength={150}
-          placeholder="write your task!"
-          style={{
-            backgroundColor: "white",
-            width: "85%",
-            height: 50,
-            paddingLeft: 10,
-            borderRadius: 5,
-          }}
-          multiline={true}
-          returnKeyType="done"
-          onChangeText={(text: string) => {
-            setNewTask((oldTask: Task) => {
-              oldTask.activity = text;
-              return { ...oldTask };
-            });
-          }}
-          value={newTask?.activity}
-        ></TextInput>
-      </View>
-
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              marginTop: 20,
-              marginBottom: 5,
-            }}
-          >
-            Timer:
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Slider
-          style={{ width: "90%" }}
-          minimumValue={10}
-          maximumValue={240}
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#1A9375"
-          step={10}
-          onValueChange={(text: number) => {
-            setNewTask((oldTask: Task) => {
-              oldTask.timer = text;
-              setSliderValue(text);
-              return { ...oldTask };
-            });
-            OpacityHandler();
-          }}
-          value={newTask?.timer}
-        />
-        <Text style={{ color: "white", fontSize: 25 }}>
-          {sliderValue} minutes
-        </Text>
-      </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              marginTop: 20,
-              marginBottom: 5,
-            }}
-          >
-            Plant:
-          </Text>
-        </View>
-      </View>
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View
-          style={{
-            width: "85%",
-            justifyContent: "space-between",
-            flexDirection: "row",
-          }}
-        >
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                setNewTask((oldTask: Task) => {
-                  oldTask.plant = "Ivy";
-                  oldTask.plantTimer = 10 * 60;
-                  return { ...oldTask };
-                });
+            <View
+              style={{
+                backgroundColor: "#68D2AE",
+                width: 120,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
               }}
             >
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white" }}>Ivy</Text>
-              </View>
-              <View style={{ width: 60, height: 60 }}>
-                <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  source={require("../../assets/Plants/plantIcons/Plant1.png")}
-                />
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>10:00</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.opacity}>
-            <TouchableOpacity
-              disabled={disabled}
-              onPress={() => {
-                setNewTask((oldTask: Task) => {
-                  oldTask.plant = "Basil";
-                  oldTask.plantTimer = 30 * 60;
-                  return { ...oldTask };
-                });
-              }}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white" }}>Basil</Text>
-              </View>
-              <View style={{ width: 60, height: 60 }}>
-                <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  source={require("../../assets/Plants/plantIcons/Plant2.png")}
-                />
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>30:00</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.opacityPlant3}>
-            <TouchableOpacity
-              disabled={disabledPlant3}
-              onPress={() => {
-                setNewTask((oldTask: Task) => {
-                  oldTask.plant = "Kunal";
-                  oldTask.plantTimer = 60 * 60;
-                  return { ...oldTask };
-                });
-              }}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white" }}>Kunal</Text>
-              </View>
-              <View style={{ width: 60, height: 60 }}>
-                <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  source={require("../../assets/Plants/plantIcons/Plant3.png")}
-                />
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>60:00</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.opacityPlant4}>
-            <TouchableOpacity
-              disabled={disabledPlant4}
-              onPress={() => {
-                setNewTask((oldTask: Task) => {
-                  oldTask.plant = "Dahlia";
-                  oldTask.plantTimer = 90 * 60;
-                  return { ...oldTask };
-                });
-              }}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white" }}>Dahlia</Text>
-              </View>
-              <View style={{ width: 60, height: 60 }}>
-                <Image
-                  style={{
-                    resizeMode: "contain",
-                    flex: 1,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  source={require("../../assets/Plants/plantIcons/Plant4.png")}
-                />
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <Text style={{ color: "white", fontSize: 20 }}>90:00</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+              <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
+                Create
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
-      <TouchableOpacity
-        onPress={() => {
-          saveTask();
-        }}
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 30,
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: "#68D2AE",
-            width: 120,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
-            Create
-          </Text>
-        </View>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

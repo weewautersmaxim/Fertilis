@@ -2,77 +2,49 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
-import { StyleSheet, Image, View } from "react-native";
-import Tasks from "./screens/Tasks";
+import { Image, View } from "react-native";
+import Tasks from "./screens/Tasks/Index";
 import Plants from "./screens/Plants";
 import Timeline from "./screens/Timeline";
-import { colors } from "./styles/colors/theme";
+import { colors } from "./styles/colors/Theme";
 import { initPlants } from "./utils/PlantDb";
+import { imageDimensions } from "./styles/components/AppPage/Image";
 
 export default function App() {
+  //variables
+  const tab = createBottomTabNavigator();
+
+  //useEffects
   useEffect(() => {
     initPlants();
   }, []);
-  const Tab = createBottomTabNavigator();
 
+  //methods
   const customTabOptions = ({ route }: any) => ({
     tabBarIcon: ({}: any) => {
       if (route.name === "Tasks") {
         return (
-          <View
-            style={{
-              width: 65,
-              height: 30,
-              alignItems: "center",
-            }}
-          >
+          <View style={imageDimensions.dimensionsBox}>
             <Image
-              style={{
-                resizeMode: "contain",
-                flex: 1,
-                width: "50%",
-                height: "50%",
-              }}
+              style={imageDimensions.dimensions}
               source={require("./assets/Tasks.png")}
             />
           </View>
         );
       } else if (route.name === "Plants") {
         return (
-          <View
-            style={{
-              width: 65,
-              height: 30,
-              alignItems: "center",
-            }}
-          >
+          <View style={imageDimensions.dimensionsBox}>
             <Image
-              style={{
-                resizeMode: "contain",
-                flex: 1,
-                width: "50%",
-                height: "50%",
-              }}
+              style={imageDimensions.dimensions}
               source={require("./assets/plant.png")}
             />
           </View>
         );
       } else {
         return (
-          <View
-            style={{
-              width: 65,
-              height: 30,
-              alignItems: "center",
-            }}
-          >
+          <View style={imageDimensions.dimensionsBox}>
             <Image
-              style={{
-                resizeMode: "contain",
-                flex: 1,
-                width: "50%",
-                height: "50%",
-              }}
+              style={imageDimensions.dimensions}
               source={require("./assets/Timeline.png")}
             />
           </View>
@@ -83,7 +55,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
+      <tab.Navigator
         screenOptions={customTabOptions}
         tabBarOptions={{
           activeTintColor: "black",
@@ -95,10 +67,10 @@ export default function App() {
           },
         }}
       >
-        <Tab.Screen name="Tasks" component={Tasks} />
-        <Tab.Screen name="Plants" component={Plants} />
-        <Tab.Screen name="Timeline" component={Timeline} />
-      </Tab.Navigator>
+        <tab.Screen name="Tasks" component={Tasks} />
+        <tab.Screen name="Plants" component={Plants} />
+        <tab.Screen name="Timeline" component={Timeline} />
+      </tab.Navigator>
       <StatusBar />
     </NavigationContainer>
   );

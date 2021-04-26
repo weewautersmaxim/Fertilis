@@ -1,5 +1,4 @@
-import React from "react";
-
+//deze clockify is klein beetje anders dan taskage
 export const clockify = (secondsLeft: number) => {
   let hours = Math.floor(secondsLeft / 60 / 60);
   let mins = Math.floor((secondsLeft / 60) % 60);

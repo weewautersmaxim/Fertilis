@@ -27,4 +27,16 @@ export const Tasks = StyleSheet.create({
     height: "100%",
     marginLeft: 8,
   },
+  taskImageContainer: {
+    width: 65,
+    height: 65,
+  },
+  text: {
+    fontSize: 23,
+    color: "#707070",
+  },
+  textTitle: {
+    color: "white",
+    fontSize: 18,
+  },
 });
