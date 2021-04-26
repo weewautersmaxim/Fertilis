@@ -314,7 +314,7 @@ const AddPage = ({ navigation }: any) => {
           >
             <View
               style={{
-                backgroundColor: "#68D2AE",
+                backgroundColor: "#95D9C2",
                 width: 120,
                 justifyContent: "center",
                 alignItems: "center",
