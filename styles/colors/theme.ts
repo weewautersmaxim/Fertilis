@@ -6,6 +6,7 @@ export const colors = {
   darkgrey: "#707070",
   green: "#56B59F",
   white: "#FFF",
+  red: "#F44242",
 };
 
 export const background = {
@@ -17,7 +18,4 @@ export const background = {
       backgroundColor: colors.darkgreen,
     },
   }),
-  theme: {
-    // ...
-  },
 };

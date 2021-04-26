@@ -7,13 +7,16 @@ import {
   TextInput,
   Slider,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getStylesAdd } from "../../Components/General/CustomStyle";
+import {
+  customFormValidationStyle,
+  getStylesAdd,
+} from "../../Components/General/CustomStyle";
 import Logo from "../../Components/Logo";
 import Task from "../../models/Task";
-import { background } from "../../styles/colors/Theme";
+import { background, colors } from "../../styles/colors/Theme";
 import { Add } from "../../styles/components/AddPage/Add";
+import { basicStyle } from "../../styles/components/general/BasicStyles";
 import { header } from "../../styles/components/general/StackHeader";
 import { initTasks, taskCRUD } from "../../utils/Db";
 
@@ -27,6 +30,9 @@ const AddPage = ({ navigation }: any) => {
     plantTimer: 600,
     unfinished: "false",
   });
+  const [customFormValidation, SetCustomFormValidation] = useState("none");
+  const [customFormBorder, SetCustomFormBorder] = useState(colors.white);
+
   //special usestates for every plant for changing opacity for each individual plant (first plant never unavailable)
   const [opacityValue2, SetOpacityValue2] = useState(1);
   const [OpacityValuePlant3, SetOpacityValuePlant3] = useState(1);
@@ -47,12 +53,14 @@ const AddPage = ({ navigation }: any) => {
   }, [sliderValue]);
 
   const saveTask = async () => {
-    if (newTask.activity && newTask.timer && newTask.plant) {
+    if (newTask.activity) {
       const insert = await taskCRUD.create(newTask);
       if (insert.rowsAffected > 0) {
         navigation.navigate("TaskPage");
       }
     } else {
+      SetCustomFormValidation("flex");
+      SetCustomFormBorder(colors.red);
       console.log("not saved");
     }
   };
@@ -61,6 +69,11 @@ const AddPage = ({ navigation }: any) => {
     opacityValue2,
     OpacityValuePlant3,
     OpacityValuePlant4
+  );
+
+  const formStyle = customFormValidationStyle(
+    customFormValidation,
+    customFormBorder
   );
 
   const OpacityHandler = () => {
@@ -119,15 +132,15 @@ const AddPage = ({ navigation }: any) => {
       </View>
       {/* end header */}
       <View style={Add.section}>
-        <ScrollView style={{ width: "100%" }}>
+        <View style={{ width: "100%" }}>
           <View style={Add.section}>
             <Text style={Add.title}>Activity:</Text>
           </View>
           <View style={Add.section}>
             <TextInput
               maxLength={150}
-              placeholder="write your task!"
-              style={Add.input}
+              placeholder="Write your task..."
+              style={[Add.input, formStyle.border]}
               multiline={true}
               returnKeyType="done"
               onChangeText={(text: string) => {
@@ -138,6 +151,7 @@ const AddPage = ({ navigation }: any) => {
               }}
               value={newTask?.activity}
             ></TextInput>
+            <Text style={formStyle.message}>Activity required</Text>
           </View>
 
           <View style={Add.section}>
@@ -149,7 +163,7 @@ const AddPage = ({ navigation }: any) => {
             <Slider
               style={{ width: "90%" }}
               //Change minimum value in case you want to test with lower value
-              minimumValue={0.2}
+              minimumValue={10}
               maximumValue={240}
               minimumTrackTintColor="#FFFFFF"
               maximumTrackTintColor="#1A9375"
@@ -206,7 +220,7 @@ const AddPage = ({ navigation }: any) => {
                     setNewTask((oldTask: Task) => {
                       oldTask.plant = "Ivy";
                       //Change number in case you want to test with lower value
-                      oldTask.plantTimer = 10 * 1;
+                      oldTask.plantTimer = 10 * 60;
                       return { ...oldTask };
                     });
                   }}
@@ -304,29 +318,33 @@ const AddPage = ({ navigation }: any) => {
           </View>
           <TouchableOpacity
             onPress={() => {
+              console.log("test press");
               saveTask();
             }}
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 30,
-            }}
+            style={[
+              basicStyle.center,
+              {
+                marginTop: 30,
+              },
+            ]}
           >
             <View
-              style={{
-                backgroundColor: "#95D9C2",
-                width: 120,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-              }}
+              pointerEvents="none"
+              style={[
+                basicStyle.center,
+                {
+                  backgroundColor: "#95D9C2",
+                  width: 120,
+                  borderRadius: 5,
+                },
+              ]}
             >
               <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
                 Create
               </Text>
             </View>
           </TouchableOpacity>
-        </ScrollView>
+        </View>
       </View>
     </SafeAreaView>
   );

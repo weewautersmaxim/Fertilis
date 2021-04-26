@@ -42,7 +42,7 @@ const Plants = ({ navigation }: any) => {
 
   const openShareDialogAsync = async () => {
     if (!(await Sharing.isAvailableAsync())) {
-      alert(`haring isn't available on your platform`);
+      alert(`sharing isn't available on your platform`);
       return;
     }
     const messageText = "Text that you want to share goes here";
@@ -398,7 +398,7 @@ const Plants = ({ navigation }: any) => {
           <TouchableOpacity
             style={{ width: 100 }}
             onPress={() => {
-              SetAchievement(
+              SetAchievement(() =>
                 require("../../assets/achievements/achievement1.png")
               );
               openShareDialogAsync();
