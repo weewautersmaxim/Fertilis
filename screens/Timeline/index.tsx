@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Image, LogBox } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import Plant from "../../models/Plant";
 import { background } from "../../styles/colors/Theme";
 import { header } from "../../styles/components/general/StackHeader";

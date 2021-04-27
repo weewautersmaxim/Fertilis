@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { header } from "../../styles/components/general/StackHeader";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import { Timer } from "../../styles/components/PlantCounterPage/Timer";
 import Task from "../../models/Task";
 import { taskCRUD } from "../../utils/Db";

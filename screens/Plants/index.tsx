@@ -8,7 +8,7 @@ import {
   LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import { background } from "../../styles/colors/Theme";
 import { header } from "../../styles/components/general/StackHeader";
 import { PlantCRUD } from "../../utils/PlantDb";
@@ -21,39 +21,11 @@ import { getStylesPlants } from "../../Components/General/CustomStyle";
 import { plant } from "../../styles/components/PlantPage/Plant";
 import { basicStyle } from "../../styles/components/general/BasicStyles";
 
+import Achievement from "../../Components/PlantPage/Achievements";
+import Section from "../../Components/PlantPage/Section";
+import PlantComponent from "../../Components/PlantPage/Plant";
+
 const Plants = ({ navigation }: any) => {
-  const [image, SetImage] = useState<Asset | null>(null);
-  const [achievement, SetAchievement] = useState(
-    require("../../assets/achievements/achievement1.png")
-  );
-  useEffect(() => {
-    imageDownload();
-  }, []);
-
-  useEffect(() => {
-    imageDownload();
-  }, [achievement]);
-
-  const imageDownload = () => {
-    const imageDownload = Asset.fromModule(achievement);
-    imageDownload.downloadAsync();
-    SetImage(imageDownload);
-  };
-
-  const openShareDialogAsync = async () => {
-    if (!(await Sharing.isAvailableAsync())) {
-      alert(`sharing isn't available on your platform`);
-      return;
-    }
-    const messageText = "Text that you want to share goes here";
-    let options = {
-      dialogTitle: messageText,
-    };
-    const url = image?.localUri!;
-
-    await Sharing.shareAsync(url, options);
-  };
-
   //useStates
   const [plantState, SetPlantState] = useState<Plant[]>([]);
 
@@ -63,21 +35,27 @@ const Plants = ({ navigation }: any) => {
   const [plantCounterKunal, SetPlantCounterKunal] = useState(0);
   const [plantCounterDahlia, SetPlantCounterDahlia] = useState(0);
 
-  //opacity usestates
+  //opacity useStates
   const [opacityValueIvy, SetOpacityValueIvy] = useState(1);
   const [opacityValueBasil, SetOpacityValueBasil] = useState(1);
   const [opacityValueKunal, SetOpacityValueKunal] = useState(1);
   const [opacityValueDahlia, SetOpacityValueDahlia] = useState(1);
 
-  //opacity usestate achievements
+  //opacity useState achievements
   const [achievOpacity1, SetAchievOpacity1] = useState(1);
   const [achievOpacity2, SetAchievOpacity2] = useState(1);
   const [achievOpacity3, SetAchievOpacity3] = useState(1);
+
+  //useStates for sharing
+  const [image01, SetImage01] = useState<Asset | null>(null);
+  const [image02, SetImage02] = useState<Asset | null>(null);
+  const [image03, SetImage03] = useState<Asset | null>(null);
 
   // useEffects;
 
   useEffect(() => {
     getPlants();
+    imageDownload();
   }, []);
 
   useFocusEffect(
@@ -203,6 +181,41 @@ const Plants = ({ navigation }: any) => {
     }
   };
 
+  //sharing functionality
+  const imageDownload = () => {
+    const imageDownload = Asset.fromModule(
+      require("../../assets/achievements/achievement1.png")
+    );
+    imageDownload.downloadAsync();
+    SetImage01(imageDownload);
+
+    const imageDownload2 = Asset.fromModule(
+      require("../../assets/achievements/achievement2.png")
+    );
+    imageDownload2.downloadAsync();
+    SetImage02(imageDownload2);
+
+    const imageDownload3 = Asset.fromModule(
+      require("../../assets/achievements/achievement3.png")
+    );
+    imageDownload3.downloadAsync();
+    SetImage03(imageDownload3);
+  };
+
+  const openShareDialogAsync = async (image: Asset | null) => {
+    if (!(await Sharing.isAvailableAsync())) {
+      alert(`sharing isn't available on your platform`);
+      return;
+    }
+    const messageText = "Text that you want to share goes here";
+    let options = {
+      dialogTitle: messageText,
+    };
+    const url = image?.localUri!;
+
+    await Sharing.shareAsync(url, options);
+  };
+
   //when starting app, no tasks exist, hide error that he can't find any tasks yet...
   LogBox.ignoreAllLogs();
 
@@ -240,242 +253,89 @@ const Plants = ({ navigation }: any) => {
         ></View>
       </View>
       {/* end header */}
-      <View style={basicStyle.center}>
-        <View style={plant.rowWidth}>
-          <Text style={plant.title}>Plants:</Text>
-        </View>
-      </View>
+      <Section title={"Plants:"}></Section>
       <View style={basicStyle.center}>
         <View style={plant.rowSection}>
           {/* first plant */}
-          <View>
-            <View style={styles.opacityIvy}>
-              <View style={basicStyle.center}>
-                <Text style={basicStyle.text}>Ivy</Text>
-              </View>
-              <View style={plant.icons}>
-                <Image
-                  style={basicStyle.basicImage}
-                  source={require("../../assets/Plants/plantIcons/Plant1.png")}
-                />
-              </View>
-            </View>
-            <View style={plant.redDot}>
-              <ImageBackground
-                style={basicStyle.basicImage}
-                source={require("../../assets/Plants/plantIcons/RedDot.png")}
-              >
-                <View
-                  style={[
-                    basicStyle.center,
-                    {
-                      top: 3.5,
-                    },
-                  ]}
-                >
-                  <Text style={plant.counter}>{plantCounterIvy}</Text>
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={basicStyle.center}>
-              <Text style={basicStyle.text}>10:00</Text>
-            </View>
-          </View>
+          <PlantComponent
+            style={styles.opacityIvy}
+            title={"Ivy"}
+            imageSource={require("../../assets/Plants/plantIcons/Plant1.png")}
+            amount={plantCounterIvy}
+            timer={"10:00"}
+          ></PlantComponent>
           {/* new plant */}
-          <View>
-            <View style={styles.opacityBasil}>
-              <View style={basicStyle.center}>
-                <Text style={basicStyle.text}>Basil</Text>
-              </View>
-              <View style={plant.icons}>
-                <Image
-                  style={basicStyle.basicImage}
-                  source={require("../../assets/Plants/plantIcons/Plant2.png")}
-                />
-              </View>
-            </View>
-            <View style={plant.redDot}>
-              <ImageBackground
-                style={basicStyle.basicImage}
-                source={require("../../assets/Plants/plantIcons/RedDot.png")}
-              >
-                <View
-                  style={[
-                    basicStyle.center,
-                    {
-                      top: 3.5,
-                    },
-                  ]}
-                >
-                  <Text style={plant.counter}>{plantCounterBasil}</Text>
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={basicStyle.center}>
-              <Text style={basicStyle.text}>30:00</Text>
-            </View>
-          </View>
+          <PlantComponent
+            style={styles.opacityBasil}
+            title={"Basil"}
+            imageSource={require("../../assets/Plants/plantIcons/Plant2.png")}
+            amount={plantCounterBasil}
+            timer={"30:00"}
+          ></PlantComponent>
           {/* New Plant */}
-          <View>
-            <View style={styles.opacityKunal}>
-              <View style={basicStyle.center}>
-                <Text style={basicStyle.text}>Kunal</Text>
-              </View>
-              <View style={plant.icons}>
-                <Image
-                  style={basicStyle.basicImage}
-                  source={require("../../assets/Plants/plantIcons/Plant3.png")}
-                />
-              </View>
-            </View>
-            <View style={plant.redDot}>
-              <ImageBackground
-                style={basicStyle.basicImage}
-                source={require("../../assets/Plants/plantIcons/RedDot.png")}
-              >
-                <View
-                  style={[
-                    basicStyle.center,
-                    {
-                      top: 3.5,
-                    },
-                  ]}
-                >
-                  <Text style={plant.counter}>{plantCounterKunal}</Text>
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={basicStyle.center}>
-              <Text style={basicStyle.text}>60:00</Text>
-            </View>
-          </View>
+          <PlantComponent
+            style={styles.opacityKunal}
+            title={"Kunal"}
+            imageSource={require("../../assets/Plants/plantIcons/Plant3.png")}
+            amount={plantCounterKunal}
+            timer={"60:00"}
+          ></PlantComponent>
           {/* new plant */}
-          <View>
-            <View style={styles.opacityDahlia}>
-              <View style={basicStyle.center}>
-                <Text style={basicStyle.text}>Dahlia</Text>
-              </View>
-              <View style={plant.icons}>
-                <Image
-                  style={basicStyle.basicImage}
-                  source={require("../../assets/Plants/plantIcons/Plant4.png")}
-                />
-              </View>
-            </View>
-            <View style={plant.redDot}>
-              <ImageBackground
-                style={basicStyle.basicImage}
-                source={require("../../assets/Plants/plantIcons/RedDot.png")}
-              >
-                <View
-                  style={[
-                    basicStyle.center,
-                    {
-                      top: 3.5,
-                    },
-                  ]}
-                >
-                  <Text style={plant.counter}>{plantCounterDahlia}</Text>
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={basicStyle.center}>
-              <Text style={basicStyle.text}>90:00</Text>
-            </View>
-          </View>
+          <PlantComponent
+            style={styles.opacityDahlia}
+            title={"Dahlia"}
+            imageSource={require("../../assets/Plants/plantIcons/Plant4.png")}
+            amount={plantCounterDahlia}
+            timer={"90:00"}
+          ></PlantComponent>
         </View>
       </View>
       {/* end section plants */}
       {/* start section achievments */}
-      <View style={basicStyle.center}>
-        <View style={plant.rowWidth}>
-          <Text style={plant.title}>Achievements:</Text>
-        </View>
-      </View>
+      <Section title={"Achievements:"}></Section>
       <View style={basicStyle.center}>
         <View style={plant.rowSection}>
           {/* achievement 1 */}
           <TouchableOpacity
             style={{ width: 100 }}
             onPress={() => {
-              SetAchievement(() =>
-                require("../../assets/achievements/achievement1.png")
-              );
-              openShareDialogAsync();
+              openShareDialogAsync(image01);
             }}
           >
-            <View style={styles.opacityAchievement1}>
-              <View style={basicStyle.center}>
-                <View style={basicStyle.center}>
-                  <Text style={plant.achievement}>Getting started</Text>
-                </View>
-                <View style={plant.icons}>
-                  <Image
-                    style={basicStyle.basicImage}
-                    source={require("../../assets/achievements/achievement1.png")}
-                  />
-                </View>
-              </View>
-            </View>
-            <View style={basicStyle.center}>
-              <Text style={[plant.description, { textAlign: "center" }]}>
-                "Get a total of 5 plants"
-              </Text>
-            </View>
+            <Achievement
+              styles={styles.opacityAchievement1}
+              title={"Getting started"}
+              imageSource={require("../../assets/achievements/achievement1.png")}
+              description={"Get a total of 5 plants"}
+            ></Achievement>
           </TouchableOpacity>
           {/* achievement 2 */}
           <TouchableOpacity
             style={{ width: 100 }}
             onPress={() => {
-              SetAchievement(
-                require("../../assets/achievements/achievement2.png")
-              );
-              openShareDialogAsync();
+              openShareDialogAsync(image02);
             }}
           >
-            <View style={styles.opacityAchievement2}>
-              <View style={basicStyle.center}>
-                <View style={basicStyle.center}>
-                  <Text style={plant.achievement}>Catch em all</Text>
-                </View>
-                <View style={plant.icons}>
-                  <Image
-                    style={basicStyle.basicImage}
-                    source={require("../../assets/achievements/achievement2.png")}
-                  />
-                </View>
-              </View>
-            </View>
-            <View style={basicStyle.center}>
-              <Text
-                style={{ color: "white", fontSize: 12, textAlign: "center" }}
-              >
-                "Get at least one of every plant"
-              </Text>
-            </View>
+            <Achievement
+              styles={styles.opacityAchievement2}
+              title={"Catch em all"}
+              imageSource={require("../../assets/achievements/achievement2.png")}
+              description={"Get at least one of every plant"}
+            ></Achievement>
           </TouchableOpacity>
           {/* achievement 3 */}
-          <TouchableOpacity style={{ width: 100 }}>
-            <View style={styles.opacityAchievement3}>
-              <View style={basicStyle.center}>
-                <View style={basicStyle.center}>
-                  <Text style={{ color: "white", fontSize: 14 }}>
-                    Collector
-                  </Text>
-                </View>
-                <View style={plant.icons}>
-                  <Image
-                    style={basicStyle.basicImage}
-                    source={require("../../assets/achievements/achievement3.png")}
-                  />
-                </View>
-              </View>
-            </View>
-            <View style={basicStyle.center}>
-              <Text style={[plant.description, { textAlign: "center" }]}>
-                "Get a total of 25 plants"
-              </Text>
-            </View>
+          <TouchableOpacity
+            style={{ width: 100 }}
+            onPress={() => {
+              openShareDialogAsync(image03);
+            }}
+          >
+            <Achievement
+              styles={styles.opacityAchievement3}
+              title={"Collector"}
+              imageSource={require("../../assets/achievements/achievement3.png")}
+              description={"Get a total of 25 plants"}
+            ></Achievement>
           </TouchableOpacity>
         </View>
       </View>

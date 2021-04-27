@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, View, Text } from "react-native";
-import { colors } from "../styles/colors/Theme";
+import { colors } from "../../styles/colors/Theme";
 
 //component inside header component.
 const Logo = () => {
@@ -14,7 +14,7 @@ const Logo = () => {
             width: "100%",
             height: "100%",
           }}
-          source={require("../assets/logo.png")}
+          source={require("../../assets/logo.png")}
         />
       </View>
       <Text style={{ color: colors.white, fontSize: 20 }}>fertilis</Text>

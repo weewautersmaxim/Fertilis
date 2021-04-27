@@ -12,7 +12,7 @@ import {
   customFormValidationStyle,
   getStylesAdd,
 } from "../../Components/General/CustomStyle";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import Task from "../../models/Task";
 import { background, colors } from "../../styles/colors/Theme";
 import { Add } from "../../styles/components/AddPage/Add";
@@ -163,7 +163,7 @@ const AddPage = ({ navigation }: any) => {
             <Slider
               style={{ width: "90%" }}
               //Change minimum value in case you want to test with lower value
-              minimumValue={10}
+              minimumValue={0.1}
               maximumValue={240}
               minimumTrackTintColor="#FFFFFF"
               maximumTrackTintColor="#1A9375"

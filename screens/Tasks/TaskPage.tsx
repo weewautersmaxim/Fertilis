@@ -8,7 +8,7 @@ import {
   LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import Task from "../../models/Task";
 import { background } from "../../styles/colors/Theme";
 import { SQLResultSetRowList } from "expo-sqlite";
