@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   View,
   Image,
-  ImageBackground,
   LogBox,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

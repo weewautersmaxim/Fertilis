@@ -22,6 +22,7 @@ import { leftSwipe } from "../../Components/TaskPage/LeftSwipe";
 import { clock } from "../../Components/TaskPage/Clockify";
 import { getStylesTasks } from "../../Components/General/CustomStyle";
 import { basicStyle } from "../../styles/components/general/BasicStyles";
+import TaskComponent from "../../Components/TaskPage/TaskComponent";
 
 const TaskPage = ({ navigation }: any) => {
   //useStates
@@ -141,20 +142,13 @@ const TaskPage = ({ navigation }: any) => {
                   onPress={() =>
                     navigation.navigate("PlantCounter", { id: n.id })
                   }
-                  style={Tasks.task}
                   key={n.id}
                 >
-                  <View style={Tasks.taskImageContainer}>
-                    <Image style={Tasks.taskImage} source={plant(n.plant)} />
-                  </View>
-                  <Text style={[Tasks.text, { width: "35%", marginLeft: 20 }]}>
-                    {n.activity}
-                  </Text>
-                  <Text
-                    style={[Tasks.text, { marginLeft: 5, marginRight: 15 }]}
-                  >
-                    {clock(n.timer)}
-                  </Text>
+                  <TaskComponent
+                    ImageSource={plant(n.plant)}
+                    activity={n.activity}
+                    timer={clock(n.timer)}
+                  />
                 </TouchableOpacity>
               </Swipeable>
             ))}
@@ -181,20 +175,13 @@ const TaskPage = ({ navigation }: any) => {
                   onPress={() =>
                     navigation.navigate("PlantCounter", { id: n.id })
                   }
-                  style={Tasks.task}
                   key={n.id}
                 >
-                  <View style={Tasks.taskImageContainer}>
-                    <Image style={Tasks.taskImage} source={plant(n.plant)} />
-                  </View>
-                  <Text style={[Tasks.text, { width: "35%", marginLeft: 20 }]}>
-                    {n.activity}
-                  </Text>
-                  <Text
-                    style={[Tasks.text, { marginLeft: 5, marginRight: 15 }]}
-                  >
-                    {clock(n.timer)}
-                  </Text>
+                  <TaskComponent
+                    ImageSource={plant(n.plant)}
+                    activity={n.activity}
+                    timer={clock(n.timer)}
+                  />
                 </TouchableOpacity>
               </Swipeable>
             ))}

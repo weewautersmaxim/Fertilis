@@ -276,9 +276,9 @@ const PlantCounter = ({ navigation, route }: any) => {
           <Text style={Timer.titel}>{detail?.activity}</Text>
           <Text>
             {/* timer voor plant, test purpose */}
-            {/* {clockifyPlant(secondsPlant).displayHours}:
+            {clockifyPlant(secondsPlant).displayHours}:
             {clockifyPlant(secondsPlant).displayMins}:{""}
-            {clockifyPlant(secondsPlant).displaySecs} */}
+            {clockifyPlant(secondsPlant).displaySecs}
           </Text>
         </View>
       </View>
