@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 export const Swipe = StyleSheet.create({
   swipeBox: {
-    backgroundColor: "#1A9375",
+    backgroundColor: "#479479",
     marginTop: 10,
     flexDirection: "row",
     width: "100%",

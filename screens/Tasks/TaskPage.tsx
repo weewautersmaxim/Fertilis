@@ -147,10 +147,12 @@ const TaskPage = ({ navigation }: any) => {
                   <View style={Tasks.taskImageContainer}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text style={[Tasks.text, { width: "40%" }]}>
+                  <Text style={[Tasks.text, { width: "35%", marginLeft: 20 }]}>
                     {n.activity}
                   </Text>
-                  <Text style={[Tasks.text, { marginRight: 20 }]}>
+                  <Text
+                    style={[Tasks.text, { marginLeft: 5, marginRight: 15 }]}
+                  >
                     {clock(n.timer)}
                   </Text>
                 </TouchableOpacity>
@@ -185,10 +187,12 @@ const TaskPage = ({ navigation }: any) => {
                   <View style={Tasks.taskImageContainer}>
                     <Image style={Tasks.taskImage} source={plant(n.plant)} />
                   </View>
-                  <Text style={[Tasks.text, { width: "40%" }]}>
+                  <Text style={[Tasks.text, { width: "35%", marginLeft: 20 }]}>
                     {n.activity}
                   </Text>
-                  <Text style={[Tasks.text, { marginRight: 20 }]}>
+                  <Text
+                    style={[Tasks.text, { marginLeft: 5, marginRight: 15 }]}
+                  >
                     {clock(n.timer)}
                   </Text>
                 </TouchableOpacity>

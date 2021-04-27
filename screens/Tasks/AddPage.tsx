@@ -333,7 +333,7 @@ const AddPage = ({ navigation }: any) => {
               style={[
                 basicStyle.center,
                 {
-                  backgroundColor: "#95D9C2",
+                  backgroundColor: "#78C3A9",
                   width: 120,
                   borderRadius: 5,
                 },
