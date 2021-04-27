@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../styles/colors/Theme";
 
 //custom style for taskpage
 export const getStylesTasks = (customDisplay: any) =>
@@ -28,35 +29,51 @@ export const getStylesAdd = (
     },
   });
 
-  export const getStylesPlants = (
-    opacityBasil: any,
-    opacityIvy: any,
-    opacityKunal: any,
-    opacityDahlia: any,
-    opacityAchievement1: any,
-    achievOpacity2: any,
-    achievOpacity3: any
-  ) =>
-    StyleSheet.create({
-      opacityIvy: {
-        opacity: opacityIvy,
-      },
-      opacityBasil: {
-        opacity: opacityBasil,
-      },
-      opacityKunal: {
-        opacity: opacityKunal,
-      },
-      opacityDahlia: {
-        opacity: opacityDahlia,
-      },
-      opacityAchievement1: {
-        opacity: opacityAchievement1,
-      },
-      opacityAchievement2: {
-        opacity: achievOpacity2,
-      },
-      opacityAchievement3: {
-        opacity: achievOpacity3,
-      },
-    });
+export const getStylesPlants = (
+  opacityBasil: any,
+  opacityIvy: any,
+  opacityKunal: any,
+  opacityDahlia: any,
+  opacityAchievement1: any,
+  achievOpacity2: any,
+  achievOpacity3: any
+) =>
+  StyleSheet.create({
+    opacityIvy: {
+      opacity: opacityIvy,
+    },
+    opacityBasil: {
+      opacity: opacityBasil,
+    },
+    opacityKunal: {
+      opacity: opacityKunal,
+    },
+    opacityDahlia: {
+      opacity: opacityDahlia,
+    },
+    opacityAchievement1: {
+      opacity: opacityAchievement1,
+    },
+    opacityAchievement2: {
+      opacity: achievOpacity2,
+    },
+    opacityAchievement3: {
+      opacity: achievOpacity3,
+    },
+  });
+
+export const customFormValidationStyle = (
+  displayValue: any,
+  formBorder: string
+) =>
+  StyleSheet.create({
+    message: {
+      color: colors.red,
+      fontSize: 15,
+      display: displayValue,
+    },
+    border: {
+      borderWidth: 2,
+      borderColor: formBorder,
+    },
+  });

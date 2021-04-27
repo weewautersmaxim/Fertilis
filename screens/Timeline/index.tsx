@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Image, LogBox } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import Plant from "../../models/Plant";
 import { background } from "../../styles/colors/Theme";
 import { header } from "../../styles/components/general/StackHeader";
@@ -95,14 +95,25 @@ const Timeline = ({ navigation }: any) => {
             </View>
             <View style={basicStyle.center}>
               <View style={{ width: "85%" }}>
-                <View style={Tasks.task}>
-                  <View style={{ width: 65, height: 65 }}>
-                    <Image style={Tasks.taskImage} source={plant(n.plant)} />
-                  </View>
-                  <Text style={[timeline.font, { width: "40%" }]}>
+                <View style={timeline.container}>
+                  <Text
+                    style={[timeline.font, { marginTop: 5, marginBottom: 5 }]}
+                  >
                     {n.activity}
                   </Text>
-                  <Text style={[timeline.font, { marginRight: 20 }]}>
+                  <View
+                    style={{
+                      width: 80,
+                      height: 80,
+                    }}
+                  >
+                    <Image
+                      style={basicStyle.basicImage}
+                      source={plant(n.plant)}
+                    />
+                  </View>
+
+                  <Text style={[timeline.font, { marginBottom: 5 }]}>
                     {clock(n.plantTimer! / 60)}
                   </Text>
                 </View>

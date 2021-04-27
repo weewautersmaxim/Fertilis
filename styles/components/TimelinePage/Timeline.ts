@@ -12,4 +12,11 @@ export const timeline = StyleSheet.create({
     fontSize: 22,
     color: "#707070",
   },
+  container: {
+    backgroundColor: "white",
+    alignItems: "center",
+    borderRadius: 20,
+    marginTop: 5,
+    marginBottom: 5,
+  },
 });

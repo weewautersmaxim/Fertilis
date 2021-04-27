@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { header } from "../../styles/components/general/StackHeader";
-import Logo from "../../Components/Logo";
+import Logo from "../../Components/General/Logo";
 import { Timer } from "../../styles/components/PlantCounterPage/Timer";
 import Task from "../../models/Task";
 import { taskCRUD } from "../../utils/Db";
@@ -93,6 +93,12 @@ const PlantCounter = ({ navigation, route }: any) => {
             return 0;
           }
         });
+        setSecondsPlant((plantsecs) => {
+          if (plantsecs > 0) return plantsecs - 1;
+          else {
+            return 0;
+          }
+        });
       } else {
         deactivate();
         SetButtonName("Start");
@@ -102,6 +108,8 @@ const PlantCounter = ({ navigation, route }: any) => {
 
     setDetail((oldNote: Task) => {
       oldNote.timer = parseFloat((secondsLeft / 60).toFixed(2));
+      oldNote.plantTimer = secondsPlant;
+
       return { ...oldNote };
     });
 
@@ -110,30 +118,6 @@ const PlantCounter = ({ navigation, route }: any) => {
       saveTask();
     }
     return () => clearInterval(interval);
-  }, [timerOn]);
-
-  // timer plant
-  useEffect(() => {
-    const Plantinterval = setInterval(() => {
-      if (timerOn) {
-        setSecondsPlant((plantsecs) => {
-          if (plantsecs > 0) return plantsecs - 1;
-          else {
-            // setDetail((oldNote: Task) => {
-            //   oldNote.plantTimer = 0;
-            //   return { ...oldNote };
-            // });
-            clearInterval(Plantinterval);
-            return 0;
-          }
-        });
-      }
-    }, 1000);
-    setDetail((oldNote: Task) => {
-      oldNote.plantTimer = secondsPlant;
-      return { ...oldNote };
-    });
-    return () => clearInterval(Plantinterval);
   }, [timerOn]);
 
   //notifications
@@ -278,96 +262,93 @@ const PlantCounter = ({ navigation, route }: any) => {
         ></View>
       </View>
       {/* end header */}
-      <ScrollView>
-        <View style={{ alignItems: "center" }}>
-          <View
-            style={[
-              basicStyle.center,
-              {
-                marginTop: 20,
-                width: "80%",
-              },
-            ]}
-          >
-            <Text style={Timer.titel}>{detail?.activity}</Text>
-            <Text>
-              {clockifyPlant(secondsPlant).displayHours}:
-              {clockifyPlant(secondsPlant).displayMins}:{""}
-              {clockifyPlant(secondsPlant).displaySecs}
-            </Text>
-          </View>
-        </View>
-        <View style={basicStyle.center}>
-          <View
-            style={{
-              alignItems: "center",
-              width: "82%",
-            }}
-          >
-            {/* lottie file */}
-            <LottieView
-              style={{ width: "100%", position: "absolute" }}
-              source={require("../../assets/Lottie/Breathing.json")}
-              autoPlay={true}
-            ></LottieView>
-            <View
-              style={{
-                width: 180,
-                height: 180,
-                marginTop: 70,
-              }}
-            >
-              <Image style={basicStyle.basicImage} source={Img}></Image>
-            </View>
-          </View>
-        </View>
-        {/* timer */}
+
+      <View style={basicStyle.center}>
         <View
           style={[
             basicStyle.center,
             {
-              marginTop: 80,
+              marginTop: 10,
+              width: "80%",
             },
           ]}
         >
-          <Text style={{ color: "white", fontSize: 28 }}>
-            {clockify(secondsLeft).displayHours}:
-            {clockify(secondsLeft).displayMins}:{""}
-            {clockify(secondsLeft).displaySecs}
+          <Text style={Timer.titel}>{detail?.activity}</Text>
+          <Text>
+            {/* timer voor plant, test purpose */}
+            {clockifyPlant(secondsPlant).displayHours}:
+            {clockifyPlant(secondsPlant).displayMins}:{""}
+            {clockifyPlant(secondsPlant).displaySecs}
           </Text>
         </View>
-        <TouchableOpacity
-          onPress={async () => {
-            setTimerOn((timerOn) => !timerOn);
-            setDetail((oldNote: Task) => {
-              oldNote.unfinished = "true";
-              return { ...oldNote };
-            });
-            // await schedulePushNotification();
+      </View>
+
+      <View style={[basicStyle.center, { height: "55%" }]}>
+        <View
+          style={{
+            alignItems: "center",
+            width: "82%",
+            height: "100%",
+            justifyContent: "center",
           }}
+        >
+          {/* lottie file */}
+          <LottieView
+            style={{ width: "100%", position: "absolute" }}
+            source={require("../../assets/Lottie/Breathing.json")}
+            autoPlay={true}
+          ></LottieView>
+          <View
+            style={{
+              width: 180,
+              height: 180,
+            }}
+          >
+            <Image style={basicStyle.basicImage} source={Img}></Image>
+          </View>
+        </View>
+      </View>
+
+      {/* timer */}
+      <View style={[basicStyle.center, { marginTop: 10 }]}>
+        <Text style={{ color: "white", fontSize: 28 }}>
+          {clockify(secondsLeft).displayHours}:
+          {clockify(secondsLeft).displayMins}:{""}
+          {clockify(secondsLeft).displaySecs}
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={[
+          basicStyle.center,
+          {
+            marginTop: 10,
+            height: 50,
+          },
+        ]}
+        onPress={async () => {
+          setTimerOn((timerOn) => !timerOn);
+          setDetail((oldNote: Task) => {
+            oldNote.unfinished = "true";
+            return { ...oldNote };
+          });
+          // await schedulePushNotification();
+        }}
+      >
+        <View
           style={[
             basicStyle.center,
             {
-              marginTop: 20,
+              backgroundColor: "#78C3A9",
+              width: 120,
+              borderRadius: 5,
             },
           ]}
         >
-          <View
-            style={[
-              basicStyle.center,
-              {
-                backgroundColor: "#95D9C2",
-                width: 120,
-                borderRadius: 5,
-              },
-            ]}
-          >
-            <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
-              {buttonName}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+          <Text style={{ color: "white", fontSize: 25, padding: 5 }}>
+            {buttonName}
+          </Text>
+        </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
