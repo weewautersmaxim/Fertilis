@@ -318,7 +318,6 @@ const AddPage = ({ navigation }: any) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              console.log("test press");
               saveTask();
             }}
             style={[

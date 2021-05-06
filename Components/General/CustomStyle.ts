@@ -30,27 +30,11 @@ export const getStylesAdd = (
   });
 
 export const getStylesPlants = (
-  opacityBasil: any,
-  opacityIvy: any,
-  opacityKunal: any,
-  opacityDahlia: any,
   opacityAchievement1: any,
   achievOpacity2: any,
   achievOpacity3: any
 ) =>
   StyleSheet.create({
-    opacityIvy: {
-      opacity: opacityIvy,
-    },
-    opacityBasil: {
-      opacity: opacityBasil,
-    },
-    opacityKunal: {
-      opacity: opacityKunal,
-    },
-    opacityDahlia: {
-      opacity: opacityDahlia,
-    },
     opacityAchievement1: {
       opacity: opacityAchievement1,
     },
