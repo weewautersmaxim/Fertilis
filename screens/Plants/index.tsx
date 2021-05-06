@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  LogBox,
-} from "react-native";
+import { Text, TouchableOpacity, View, Image, LogBox } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Logo from "../../Components/General/Logo";
 import { background } from "../../styles/colors/Theme";
@@ -33,12 +27,6 @@ const Plants = ({ navigation }: any) => {
   const [plantCounterBasil, SetPlantCounterBasil] = useState(0);
   const [plantCounterKunal, SetPlantCounterKunal] = useState(0);
   const [plantCounterDahlia, SetPlantCounterDahlia] = useState(0);
-
-  //opacity useStates
-  const [opacityValueIvy, SetOpacityValueIvy] = useState(1);
-  const [opacityValueBasil, SetOpacityValueBasil] = useState(1);
-  const [opacityValueKunal, SetOpacityValueKunal] = useState(1);
-  const [opacityValueDahlia, SetOpacityValueDahlia] = useState(1);
 
   //opacity useState achievements
   const [achievOpacity1, SetAchievOpacity1] = useState(1);
@@ -68,7 +56,6 @@ const Plants = ({ navigation }: any) => {
   }, [plantState]);
 
   useEffect(() => {
-    opacityHandler();
     achievements();
   }, [
     plantCounterIvy,
@@ -114,40 +101,10 @@ const Plants = ({ navigation }: any) => {
   };
 
   const styles = getStylesPlants(
-    opacityValueBasil,
-    opacityValueIvy,
-    opacityValueKunal,
-    opacityValueDahlia,
     achievOpacity1,
     achievOpacity2,
     achievOpacity3
   );
-
-  const opacityHandler = () => {
-    if (plantCounterIvy == 0) {
-      SetOpacityValueIvy(0.4);
-    } else {
-      SetOpacityValueIvy(1);
-    }
-
-    if (plantCounterBasil == 0) {
-      SetOpacityValueBasil(0.4);
-    } else {
-      SetOpacityValueBasil(1);
-    }
-
-    if (plantCounterKunal == 0) {
-      SetOpacityValueKunal(0.4);
-    } else {
-      SetOpacityValueKunal(1);
-    }
-
-    if (plantCounterDahlia == 0) {
-      SetOpacityValueDahlia(0.4);
-    } else {
-      SetOpacityValueDahlia(1);
-    }
-  };
 
   const achievements = () => {
     let amountOfPlants =
@@ -257,15 +214,16 @@ const Plants = ({ navigation }: any) => {
         <View style={plant.rowSection}>
           {/* first plant */}
           <PlantComponent
-            style={styles.opacityIvy}
+            style={styles}
             title={"Ivy"}
             imageSource={require("../../assets/Plants/plantIcons/Plant1.png")}
             amount={plantCounterIvy}
             timer={"10:00"}
           ></PlantComponent>
+
           {/* new plant */}
           <PlantComponent
-            style={styles.opacityBasil}
+            style={styles}
             title={"Basil"}
             imageSource={require("../../assets/Plants/plantIcons/Plant2.png")}
             amount={plantCounterBasil}
@@ -273,7 +231,7 @@ const Plants = ({ navigation }: any) => {
           ></PlantComponent>
           {/* New Plant */}
           <PlantComponent
-            style={styles.opacityKunal}
+            style={styles}
             title={"Kunal"}
             imageSource={require("../../assets/Plants/plantIcons/Plant3.png")}
             amount={plantCounterKunal}
@@ -281,7 +239,7 @@ const Plants = ({ navigation }: any) => {
           ></PlantComponent>
           {/* new plant */}
           <PlantComponent
-            style={styles.opacityDahlia}
+            style={styles}
             title={"Dahlia"}
             imageSource={require("../../assets/Plants/plantIcons/Plant4.png")}
             amount={plantCounterDahlia}

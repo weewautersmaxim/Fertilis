@@ -140,6 +140,32 @@ const PlantCounter = ({ navigation, route }: any) => {
       oldNote.datePlant = today;
       return { ...oldNote };
     });
+    switch (detail.plant) {
+      case "Basil":
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 1800;
+          return { ...oldNote };
+        });
+        break;
+      case "Kunal":
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 3600;
+          return { ...oldNote };
+        });
+        break;
+      case "Dahlia":
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 5400;
+          return { ...oldNote };
+        });
+        break;
+      default:
+        SetDetailPlant((oldNote: Plant) => {
+          oldNote.plantTimer = 600;
+          return { ...oldNote };
+        });
+        break;
+    }
   };
 
   const getDetail = async () => {
@@ -276,9 +302,9 @@ const PlantCounter = ({ navigation, route }: any) => {
           <Text style={Timer.titel}>{detail?.activity}</Text>
           <Text>
             {/* timer voor plant, test purpose */}
-            {clockifyPlant(secondsPlant).displayHours}:
+            {/* {clockifyPlant(secondsPlant).displayHours}:
             {clockifyPlant(secondsPlant).displayMins}:{""}
-            {clockifyPlant(secondsPlant).displaySecs}
+            {clockifyPlant(secondsPlant).displaySecs} */}
           </Text>
         </View>
       </View>
