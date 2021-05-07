@@ -4,29 +4,29 @@
     "slug": "Fertilis",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo_square.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo_square.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "description": "Fertilis is een app die bedoelt is om mensen te motiveren doormiddel van beloningen. Hoe werkt dit? Als een gebruiker een planning aanmaakt op deze app, stel bijvoorbeeld: “studeren”, kan hij hiervoor een tijd instellen. Als de timer dan start groeit er in de app zelf een digitaal plantje. Als de gebruiker dan zijn uur volbrengt groeit deze plant uit tot een volledige bloem. De gebruiker kan deze dan bijhouden. Op deze manier krijgt de gebruiker een gevoel van trots en prestatie dat hij/zij het uur heeft volbracht. ",
+
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo_square.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo_square.png"
     }
   }
 }
